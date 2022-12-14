@@ -1,6 +1,5 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import Link from 'next/link';
 /* Components */
 import LoginView from 'components/views/LoginView';
 

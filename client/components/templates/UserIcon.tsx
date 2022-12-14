@@ -19,7 +19,7 @@ function UserIcon({ user }: Props) {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
-        <Menu.Button className="border-b-2 border-purple-500 border-opacity-0 px-4 pt-4 pb-3 hover:border-opacity-100 hover:text-purple-500">
+        <Menu.Button className="border-b-2 border-cyan-700 border-opacity-0 px-4 pt-4 pb-3 hover:border-opacity-100 hover:text-cyan-700">
           {user?.photoURL ? (
             <img
               src={user.photoURL}

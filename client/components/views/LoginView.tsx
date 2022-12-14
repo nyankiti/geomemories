@@ -20,7 +20,7 @@ const LoginView = () => {
               <button onClick={() => setIsSignIn(false)}>
                 <span
                   role="button"
-                  className="cursor-pointer text-purple-500 hover:underline"
+                  className="cursor-pointer text-cyan-700 hover:underline"
                 >
                   新規で会員登録する
                 </span>
@@ -29,7 +29,7 @@ const LoginView = () => {
               <button onClick={() => setIsSignIn(true)}>
                 <span
                   role="button"
-                  className="cursor-pointer text-purple-500 hover:underline"
+                  className="cursor-pointer text-cyan-700 hover:underline"
                 >
                   ログインする
                 </span>
