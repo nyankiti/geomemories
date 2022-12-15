@@ -9,10 +9,18 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@editorjs/editorjs": "^2.26.3",
+    "@editorjs/embed": "^2.5.3",
+    "@editorjs/header": "^2.7.0",
+    "@editorjs/image": "^2.7.1",
+    "@editorjs/list": "^1.8.0",
+    "@editorjs/quote": "^2.5.0",
     "@headlessui/react": "^1.7.5",
     "@react-google-maps/api": "^2.17.1",
     "axios": "^1.2.1",
     "clsx": "^1.2.1",
+    "editorjs-drag-drop": "^1.1.10",
+    "editorjs-undo": "^2.0.15",
     "eslint": "^8.29.0",
     "eslint-config-next": "^13.0.6",
     "firebase": "^9.15.0",

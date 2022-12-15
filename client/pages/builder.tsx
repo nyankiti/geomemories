@@ -2,6 +2,7 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 /* Components */
 import GoogleMapView from 'components/views/GoogleMapView';
+import BlockEditorView from 'components/views/BlockEditorView';
 
 const Builder: NextPage = () => {
   return (
@@ -15,6 +16,7 @@ const Builder: NextPage = () => {
       <main>
         <p>ここで地図を表示して場所を検索できるようにする</p>
         <GoogleMapView />
+        <BlockEditorView />
       </main>
     </div>
   );

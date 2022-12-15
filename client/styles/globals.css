@@ -2,6 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
+/* editor.js と tailwind の競合を回避するための記述 */
+@layer base {
+  h1 {
+    @apply text-3xl font-bold;
+  }
+  h2 {
+    @apply text-2xl font-bold;
+  }
+  h3 {
+    @apply text-xl font-bold;
+  }
+  h4 {
+    @apply text-lg font-bold;
+  }
+  /* h5, h6 は未設定 */
+}
+
+/* editor.js のスタイル */
+.ce-block__content {
+  /* border-radius: 0.25rem 4px; */
+  border-bottom-width: 1px;
+  border-color: rgb(156 163 175);
+}
+
+/* ------------------- */
 html,
 body {
   background-color: rgb(249, 250, 251); /* bg-gray-50 */
