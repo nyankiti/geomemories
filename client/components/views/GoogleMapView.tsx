@@ -16,6 +16,7 @@ import {
   LatLng,
   InitialGeometoryObj,
 } from 'entities/geometory';
+/* globalState */
 import { usePassedGeomObjSetter } from 'components/globalState/passedGeomObjState';
 
 // 地図の大きさを指定します。
@@ -38,12 +39,17 @@ const options = {
   zoomControl: true,
 };
 
-const GoogleMapView = () => {
+type Props = {
+  initialMarker: LatLng[];
+};
+
+const GoogleMapView = ({ initialMarker }: Props) => {
   // ref
   const mapRef = useRef<google.maps.Map>();
   const searchBoxRef = useRef<google.maps.places.SearchBox>();
   // state
   const [markers, setMarkers] = useState<LatLng[]>([]);
+
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedGeometory, setSelectedGeometory] =
     useState<GeometoryObject>(InitialGeometoryObj);
@@ -61,7 +67,6 @@ const GoogleMapView = () => {
 
   const handlePlacesChanged = () => {
     // クリックされた地域のデータが手に入る
-    console.log(searchBoxRef.current?.getPlaces());
     const places = searchBoxRef.current?.getPlaces();
     if (places && places.length > 0) {
       const lat = places[0].geometry?.location?.lat();
@@ -120,6 +125,10 @@ const GoogleMapView = () => {
           options={options}
           onLoad={(ref) => {
             mapRef.current = ref;
+            // initialMarkerはなぜかsetTimeoutでずらさないと表示されない
+            setTimeout(() => {
+              setMarkers(initialMarker);
+            }, 100);
           }}
         >
           <>

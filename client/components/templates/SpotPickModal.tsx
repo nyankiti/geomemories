@@ -8,7 +8,7 @@ type Props = {
   visible: boolean;
   setVisible: Dispatch<SetStateAction<boolean>>;
   geometoryObj: GeometoryObject;
-  handleRegister: any;
+  handleRegister: () => void;
 };
 
 const SpotPickModal = ({

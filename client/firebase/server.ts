@@ -1,6 +1,7 @@
 import { initializeApp, cert, getApps } from 'firebase-admin/app';
-import { getFirestore } from 'firebase-admin/firestore';
+import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 import { getAuth } from 'firebase-admin/auth';
+import { OutputBlockData } from '@editorjs/editorjs';
 
 if (!getApps()?.length) {
   initializeApp({
@@ -13,3 +14,24 @@ if (!getApps()?.length) {
 
 export const adminDB = getFirestore();
 export const adminAuth = getAuth();
+
+export const getBlocks = async (
+  id: string,
+): Promise<{ data: OutputBlockData[]; updateAt: Timestamp } | null> => {
+  // const colRef = collection(db, 'users', id, 'blocks');
+  const docRef = adminDB
+    .collection('users')
+    .doc(id)
+    .collection('blocks')
+    .doc(id);
+
+  try {
+    const snap = await docRef.get();
+    if (snap.exists) {
+      return snap.data() as { data: OutputBlockData[]; updateAt: Timestamp };
+    }
+  } catch (e) {
+    console.log(e);
+  }
+  return null;
+};

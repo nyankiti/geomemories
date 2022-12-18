@@ -1,8 +1,9 @@
-import { collection, doc, getDoc, setDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, setDoc, Timestamp } from 'firebase/firestore';
 import { updateProfile } from 'firebase/auth';
 import { auth, db } from '../firebase/client';
 /* entities */
 import { User, buildUser } from 'entities/user';
+import { OutputBlockData } from '@editorjs/editorjs';
 
 const usersColRef = collection(db, 'users');
 
@@ -34,4 +35,17 @@ export const updateAuthName = async (name: string) => {
 };
 export const updateAuthPhotoUrl = async (photoURL: string) => {
   auth.currentUser && (await updateProfile(auth.currentUser, { photoURL }));
+};
+
+export const addBlocks = async (id: string, blockData: OutputBlockData[]) => {
+  const colRef = collection(db, 'users', id, 'blocks');
+  try {
+    // プロトタイプ版は、1人一つで、user id と同じ id の blocks サブコレクションにデータを保存する
+    await setDoc(doc(colRef, id), {
+      data: blockData,
+      updatedAt: Timestamp.now(),
+    });
+  } catch (e) {
+    console.log(e);
+  }
 };
