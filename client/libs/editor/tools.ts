@@ -3,9 +3,11 @@ const Header = require('@editorjs/header');
 const List = require('@editorjs/list');
 const Quote = require('@editorjs/quote');
 const ImageTool = require('@editorjs/image');
-import { uploadImage } from './storage';
+import { GeomBlock } from './geomBlock';
+import { uploadImage } from '../storage';
 
 const TOOLS = {
+  geom: GeomBlock,
   header: {
     class: Header,
   },

@@ -23,7 +23,19 @@ const SpotPickModal = ({
       <div className="p-2">
         <p>名前: {geometoryObj.name}</p>
         <p>住所: {geometoryObj.formatted_address}</p>
-        {geometoryObj.website && <p>website: {geometoryObj.website}</p>}
+        {geometoryObj.website && (
+          <p>
+            website:
+            <a
+              className="text-blue-600 underline"
+              href={geometoryObj.website}
+              target="_blank"
+              rel="noreferrer"
+            >
+              {geometoryObj.website}
+            </a>
+          </p>
+        )}
       </div>
       <div className="flex justify-evenly">
         <button

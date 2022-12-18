@@ -27,6 +27,29 @@
 }
 
 /* ------------------- */
+.balloon {
+  position: absolute;
+  background-color: rgb(14 116 144);
+  border-radius: 10px;
+  padding: 10px;
+  color: white;
+  margin-top: 20px;
+}
+
+.balloon::before {
+  content: '';
+  position: absolute;
+  border: 12px solid transparent;
+  border-bottom: 12px solid rgb(14 116 144);
+  top: -24px;
+  left: 50%;
+}
+
+.balloon p {
+  margin: 0;
+  padding: 0;
+}
+
 html,
 body {
   background-color: rgb(249, 250, 251); /* bg-gray-50 */

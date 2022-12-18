@@ -1,11 +1,18 @@
 import React, { useState, FormEvent } from 'react';
 import clsx from 'clsx';
 import { IoMdSearch } from 'react-icons/io';
+/* const */
+import {
+  MAP_SEARCHBAR_ID,
+  MAP_SEARCH_FORM_ID,
+  NOTES_BALLOON_ID,
+} from 'libs/globalConst';
 
 const MapSearchBar = () => {
   const [isFocus, setIsFocus] = useState(false);
   return (
     <form
+      id={MAP_SEARCH_FORM_ID}
       className="m-auto flex w-full max-w-2xl items-center"
       onSubmit={(e) => e.preventDefault()}
     >
@@ -20,13 +27,19 @@ const MapSearchBar = () => {
         </div>
         <input
           type="text"
-          id="search"
+          id={MAP_SEARCHBAR_ID}
           className="w-full p-2 pl-10 outline-none"
           onFocus={() => setIsFocus(true)}
           onBlur={() => setIsFocus(false)}
           placeholder={`スポットを検索してみよう`}
           required={true}
         />
+        <div
+          id={NOTES_BALLOON_ID}
+          className="balloon opacity-0 shadow-xl transition duration-500"
+        >
+          <p>訪れた場所を検索し、地図アルバムに追加しよう!</p>
+        </div>
       </div>
     </form>
   );

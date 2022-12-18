@@ -16,6 +16,7 @@ import {
   LatLng,
   InitialGeometoryObj,
 } from 'entities/geometory';
+import { usePassedGeomObjSetter } from 'components/globalState/passedGeomObjState';
 
 // 地図の大きさを指定します。
 const mapContainerStyle = {
@@ -46,6 +47,9 @@ const GoogleMapView = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedGeometory, setSelectedGeometory] =
     useState<GeometoryObject>(InitialGeometoryObj);
+  // global state
+  const setPassedGeomObj = usePassedGeomObjSetter();
+
   // 初期center位置は、duseMemoを使わないと、再レンダリング時に初期値に戻ってしまう
   const center = useMemo<LatLng>(
     () => ({
@@ -83,6 +87,8 @@ const GoogleMapView = () => {
 
   const handleRegister = () => {
     setMarkers((prev) => [...prev, selectedGeometory.latlng]);
+    // editor側に反映させる
+    setPassedGeomObj(selectedGeometory);
     setModalVisible(false);
   };
 
