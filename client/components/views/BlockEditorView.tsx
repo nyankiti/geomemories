@@ -83,6 +83,7 @@ const BlockEditor = ({ savedBlocks }: Props) => {
           new Undo({ editor });
           // Blockのドラックアンドドロップでの移動が可能になる
           new DragDrop(editor);
+          // server side propとして受け取った初期値の反映
           setBlockData(savedBlocks);
         },
       });

@@ -1,15 +1,15 @@
-import React, { useRef, useState, useMemo } from 'react';
+import React, { useRef, useState, useMemo, useEffect } from 'react';
 import {
   GoogleMap,
   LoadScriptNext,
   StandaloneSearchBox,
-  Marker,
+  Polyline,
 } from '@react-google-maps/api';
-import clsx from 'clsx';
 import { mapStyles } from 'styles/mapStyle';
 /* components */
 import MapSearchBar from 'components/templates/MapSearchBar';
 import SpotPickModal from 'components/templates/SpotPickModal';
+import MyMarker from 'components/parts/MyMarker';
 /* types */
 import {
   GeometoryObject,
@@ -18,6 +18,9 @@ import {
 } from 'entities/geometory';
 /* globalState */
 import { usePassedGeomObjSetter } from 'components/globalState/passedGeomObjState';
+import { useMarkersSelectorValue } from 'components/globalState/blockDataState';
+/* const */
+import { BASE_COLOR } from 'libs/globalConst';
 
 // 地図の大きさを指定します。
 const mapContainerStyle = {
@@ -39,16 +42,13 @@ const options = {
   zoomControl: true,
 };
 
-type Props = {
-  initialMarker: LatLng[];
-};
-
-const GoogleMapView = ({ initialMarker }: Props) => {
+const GoogleMapView = () => {
   // ref
   const mapRef = useRef<google.maps.Map>();
   const searchBoxRef = useRef<google.maps.places.SearchBox>();
+  const polyLineRef = useRef<google.maps.Polyline>();
   // state
-  const [markers, setMarkers] = useState<LatLng[]>([]);
+  const markers = useMarkersSelectorValue();
 
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedGeometory, setSelectedGeometory] =
@@ -91,17 +91,27 @@ const GoogleMapView = ({ initialMarker }: Props) => {
   };
 
   const handleRegister = () => {
-    setMarkers((prev) => [...prev, selectedGeometory.latlng]);
     // editor側に反映させる
     setPassedGeomObj(selectedGeometory);
     setModalVisible(false);
   };
 
   const renderMarkers = () => {
-    return markers.map((marker, i) => (
-      <Marker key={i} onLoad={(m) => console.log(m)} position={marker} />
-    ));
+    return (
+      <>
+        {markers.map((marker, i) => {
+          return <MyMarker key={i} marker={marker} index={i} />;
+        })}
+      </>
+    );
   };
+
+  useEffect(() => {
+    if (polyLineRef.current && mapRef.current) {
+      console.log('poly initi useEffect');
+      polyLineRef.current.setMap(mapRef.current);
+    }
+  }, [markers]);
 
   return (
     <>
@@ -125,10 +135,6 @@ const GoogleMapView = ({ initialMarker }: Props) => {
           options={options}
           onLoad={(ref) => {
             mapRef.current = ref;
-            // initialMarkerはなぜかsetTimeoutでずらさないと表示されない
-            setTimeout(() => {
-              setMarkers(initialMarker);
-            }, 100);
           }}
         >
           <>
@@ -141,6 +147,13 @@ const GoogleMapView = ({ initialMarker }: Props) => {
               <MapSearchBar />
             </StandaloneSearchBox>
             {renderMarkers()}
+            <Polyline
+              onLoad={(ref) => (polyLineRef.current = ref)}
+              path={
+                markers.map((marker) => marker.latlng) as google.maps.LatLng[]
+              }
+              options={{ strokeColor: BASE_COLOR, strokeOpacity: 0.6 }}
+            />
           </>
         </GoogleMap>
       </LoadScriptNext>

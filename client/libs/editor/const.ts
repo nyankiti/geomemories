@@ -22,7 +22,7 @@ export const i18n = {
     },
     toolNames: {
       Text: 'テキスト',
-      Heading: 'タイトル',
+      Heading: '見出し',
       List: 'リスト',
       Checklist: 'チェックリスト',
       Quote: '引用',

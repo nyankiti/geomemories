@@ -25,15 +25,7 @@ const Builder: NextPage<Props> = ({ stringifiedBlocks }) => {
       </Head>
 
       <main className="py-4">
-        <GoogleMapView
-          initialMarker={savedBlocks
-            .map((block) => {
-              if (block.type == 'geom' && block.data.latlng) {
-                return block.data.latlng;
-              }
-            })
-            .filter((v) => v)}
-        />
+        <GoogleMapView />
         <BlockEditorView savedBlocks={savedBlocks} />
       </main>
     </div>
