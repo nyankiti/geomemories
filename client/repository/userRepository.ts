@@ -45,7 +45,9 @@ export const addBlocks = async (id: string, blockData: OutputBlockData[]) => {
       data: blockData,
       updatedAt: Timestamp.now(),
     });
+    return true;
   } catch (e) {
     console.log(e);
+    return false;
   }
 };

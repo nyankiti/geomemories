@@ -3,7 +3,7 @@ const Header = require('@editorjs/header');
 const List = require('@editorjs/list');
 const Quote = require('@editorjs/quote');
 const ImageTool = require('@editorjs/image');
-import { GeomBlock } from './geomBlock';
+import GeomBlock from './geomBlock';
 import { uploadImage } from '../storage';
 
 const TOOLS = {

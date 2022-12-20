@@ -1,6 +1,7 @@
+import { I18nConfig, I18nDictionary } from '@editorjs/editorjs';
 export const BLOCK_ID_LEN = 10;
 
-export const i18n = {
+export const i18n: I18nConfig = {
   messages: {
     ui: {
       blockTunes: {
@@ -35,13 +36,13 @@ export const i18n = {
       Marker: 'マーカー',
     },
     blockTunes: {
-      deleteTune: {
+      delete: {
         Delete: '削除',
       },
-      moveUpTune: {
+      moveUp: {
         'Move up': '上に移動',
       },
-      moveDownTune: {
+      moveDown: {
         'Move down': '下に移動',
       },
     },

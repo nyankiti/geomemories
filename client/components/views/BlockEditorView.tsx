@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import React, { memo, useEffect, useId, useRef, useState } from 'react';
 import { nanoid } from 'nanoid';
-import EditorJS, { OutputBlockData } from '@editorjs/editorjs';
+import EditorJS, {
+  API,
+  OutputBlockData,
+  EditorConfig,
+} from '@editorjs/editorjs';
 import TOOLS from 'libs/editor/tools';
 import { BLOCK_ID_LEN, i18n } from 'libs/editor/const';
 const DragDrop = require('editorjs-drag-drop');
@@ -26,6 +30,8 @@ const BlockEditor = ({ savedBlocks }: Props) => {
   const editorRef = useRef<EditorJS>();
   // state
   const [isSaveLoading, setIsSaveLoading] = useState(false);
+  // editor.js の API に実装されているnotifierを外部から呼び出すためのstate
+  const [notifier, setNotifier] = useState<{ show: (option: any) => void }>();
   // global state
   const [blockData, setBlockData] = useBlockDataState();
   const passedGeomObj = usePassedGeomObjValue();
@@ -74,9 +80,10 @@ const BlockEditor = ({ savedBlocks }: Props) => {
         placeholder: 'Start writing your story...',
         onChange: async (api) => {
           const data = await api.saver.save();
-          console.log('onchange here');
-          console.log(data.blocks);
           setBlockData(data.blocks);
+          if (!notifier) {
+            setNotifier(api.notifier);
+          }
         },
         onReady: () => {
           // On the editor, use Ctrl + Z or ⌘ + Z to undo, or use Ctrl + Y or ⌘ + Y to redo.
@@ -97,9 +104,16 @@ const BlockEditor = ({ savedBlocks }: Props) => {
   }, []);
 
   const handlePressSave = async () => {
-    if (user) {
+    if (user && notifier) {
       setIsSaveLoading(true);
-      await addBlocks(user?.id, blockData);
+      const result = await addBlocks(user?.id, blockData);
+      if (result) {
+        notifier.show({ message: '更新しました' });
+      } else {
+        notifier.show({
+          message: '通信エラーが発生しました。時間をおいて再度試してください',
+        });
+      }
       setIsSaveLoading(false);
     }
   };
