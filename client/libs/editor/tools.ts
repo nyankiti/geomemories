@@ -2,9 +2,17 @@
 const Header = require('@editorjs/header');
 const List = require('@editorjs/list');
 const Quote = require('@editorjs/quote');
-const ImageTool = require('@editorjs/image');
 import GeomBlock from './geomBlock';
-import { uploadImage } from '../storage';
+import { storage } from '../../firebase/client';
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadString,
+  uploadBytes,
+} from '@firebase/storage';
+import { getFileEtension } from 'libs/file';
+import MyImageTool from './MyImageTool';
 
 const TOOLS = {
   geom: GeomBlock,
@@ -12,29 +20,46 @@ const TOOLS = {
     class: Header,
   },
   image: {
-    class: ImageTool,
+    class: MyImageTool,
     config: {
-      // endpoints: {
-      //   byFile: 'http://localhost:8008/uploadFile', // Your backend file uploader endpoint
-      //   byUrl: 'http://localhost:8008/fetchUrl', // Your endpoint that provides uploading by Url
-      // },
+      read_only: false,
       uploader: {
         uploadByFile: async (file: File) => {
-          // const form: UploadFileForm = { image: file };
-          // return editorService.uploadFile(form).then((res) => res.data);
-          console.log('uploadByFile');
-          // const res = await uploadImage('users', file);
-          // console.log(res);
+          const storageRef = ref(storage, 'images/' + file.name);
+          const metadata = {
+            contentType: 'image/' + getFileEtension(file.name),
+          };
+          const uploadTask = await uploadBytes(storageRef, file, metadata);
+          const downloadURL = await getDownloadURL(uploadTask.ref);
+          return {
+            success: 1,
+            file: {
+              url: downloadURL,
+            },
+            caption: 'fafafa',
+          };
         },
         // only work when url has extensions like .jpg
         uploadByUrl(url: string) {
-          // const form: UploadUrlForm = { url };
-          // return editorService.uploadFileByUrl(form);
+          return new Promise((resolve) => {
+            resolve({
+              success: 1,
+              file: {
+                url: url,
+              },
+              caption: 'fafafa',
+            });
+          });
         },
       },
     },
   },
-  list: List,
+  list: {
+    class: List,
+    config: {
+      defaultStyle: 'unordered',
+    },
+  },
   quote: Quote,
 };
 

@@ -25,7 +25,9 @@
   border-bottom-width: 1px;
   border-color: rgb(156 163 175);
 }
-
+.image-tool__caption {
+  display: none;
+}
 /* ------------------- */
 .balloon {
   position: absolute;

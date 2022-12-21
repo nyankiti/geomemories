@@ -46,5 +46,11 @@ export const i18n: I18nConfig = {
         'Move down': '下に移動',
       },
     },
+    tools: {
+      list: {
+        Ordered: 'ナンバリング',
+        Unordered: '箇条書き',
+      },
+    },
   },
 };

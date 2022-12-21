@@ -60,10 +60,10 @@
   dependencies:
     "@codexteam/icons" "^0.0.5"
 
-"@editorjs/image@^2.7.1":
-  version "2.7.1"
-  resolved "https://registry.yarnpkg.com/@editorjs/image/-/image-2.7.1.tgz#78551729640539301efcc444e52e13444f96f212"
-  integrity sha512-ANZ6s25AsTV9ZepZ8NaXviustPmtG2MlZg+V1mdfKkvCiHm515+xHqNXJYH0nA/Z6XqLjD7FV/N+nkVGRXVTHg==
+"@editorjs/image@^2.8.1":
+  version "2.8.1"
+  resolved "https://registry.yarnpkg.com/@editorjs/image/-/image-2.8.1.tgz#f78dd5ba52356d9fb2f61ff7498ea6c1510a80e4"
+  integrity sha512-4WscDAoi6OO0F6L7N1mkQymADwj8hHgH/ICk5wGRPdkesUZW1TgldX8XvSmy+f5VylsEi3F/gUggaZsrYxu2sA==
   dependencies:
     "@codexteam/icons" "^0.0.6"
 

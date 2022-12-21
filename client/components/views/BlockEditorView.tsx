@@ -40,13 +40,8 @@ const BlockEditor = ({ savedBlocks }: Props) => {
   // google mapで位置が選択された場合、editorに反映される
   useEffect(() => {
     if (passedGeomObj && editorRef.current && editorRef.current.render) {
-      const prevBlocks = blockData
-        ? blockData?.filter(
-            (block) => !(block.type == 'geom' && isObjectEmpty(block.data)),
-          )
-        : [];
       const newBlocks = [
-        ...prevBlocks,
+        ...blockData,
         {
           // ここのidはコロコロを変えるのはよくなさそう
           id: nanoid(BLOCK_ID_LEN),
@@ -80,7 +75,8 @@ const BlockEditor = ({ savedBlocks }: Props) => {
         placeholder: 'Start writing your story...',
         onChange: async (api) => {
           const data = await api.saver.save();
-          setBlockData(data.blocks);
+          setBlockData((prev) => (data && data.blocks ? data.blocks : prev));
+
           if (!notifier) {
             setNotifier(api.notifier);
           }
