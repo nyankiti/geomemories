@@ -10,6 +10,8 @@ export type GeometoryObject = {
   vicinity: string;
   website?: string;
   googleMapUrl: string;
+  // Googleとは別で画像を登録する
+  imageUrl?: string;
 };
 
 export const InitialGeometoryObj: GeometoryObject = {

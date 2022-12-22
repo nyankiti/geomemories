@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import { GeometoryObject, InitialGeometoryObj } from 'entities/geometory';
 import {
   API,
@@ -11,6 +12,11 @@ import {
   NOTES_BALLOON_ID,
 } from 'libs/globalConst';
 import Ui from './ui';
+const ajax = require('@codexteam/ajax');
+/* firestorage */
+import { storage } from '../../../firebase/client';
+import { getDownloadURL, ref, uploadBytes } from '@firebase/storage';
+import { getFileEtension } from 'libs/file';
 
 const GuideText = '';
 
@@ -25,7 +31,11 @@ export default class GeomBlock {
     this.api = api;
     this.config = config;
     this.data = data;
-    this.ui = new Ui({ api });
+    this.ui = new Ui({
+      api,
+      onSelectFile: () => this.onSelectedFile(),
+      initialImageUrl: this.data.imageUrl,
+    });
   }
 
   //メニューバーにアイコンを表示
@@ -90,4 +100,35 @@ export default class GeomBlock {
       return this.data;
     }
   }
+
+  onSelectedFile = async () => {
+    // geometoryObjectのファイルは uploadByFile のみに対応。
+
+    // ユーザーにフォルダを表示して、ファイルを選択させる
+    const files = await ajax.selectFiles({ accept: 'image/*' });
+
+    // 選択したファイルを読み込む
+    const reader = new FileReader();
+    reader.readAsDataURL(files[0]);
+    reader.onload = (e) => {
+      // base64 encodingされた画像データが入っている
+      this.ui.showPreloader(e.target?.result as string);
+    };
+
+    try {
+      // storageに保存
+      const storageRef = ref(storage, 'images/' + files[0].name);
+      const metadata = {
+        contentType: 'image/' + getFileEtension(files[0].name),
+      };
+      const uploadTask = await uploadBytes(storageRef, files[0], metadata);
+      const downloadURL = await getDownloadURL(uploadTask.ref);
+
+      // アップロードされた画像を反映する
+      this.data = { ...this.data, imageUrl: downloadURL };
+      this.ui.fillImage(downloadURL);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 }

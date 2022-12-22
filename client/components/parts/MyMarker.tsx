@@ -39,6 +39,9 @@ const MyMarker = ({ marker, index }: Props) => {
           <h3 className="text-sm">
             {index + 1}. {marker.name}
           </h3>
+          {marker.imageUrl && (
+            <img src={marker.imageUrl} className="w-40" alt={marker.name} />
+          )}
         </>
       </InfoWindow>
       <Marker

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@codexteam/ajax": "^4.2.0",
     "@editorjs/editorjs": "^2.26.3",
     "@editorjs/embed": "^2.5.3",
     "@editorjs/header": "^2.7.0",
