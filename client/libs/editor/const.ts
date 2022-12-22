@@ -38,6 +38,7 @@ export const i18n: I18nConfig = {
     blockTunes: {
       delete: {
         Delete: '削除',
+        'Click to delete': '再クリックで消去',
       },
       moveUp: {
         'Move up': '上に移動',

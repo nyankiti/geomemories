@@ -36,7 +36,6 @@ const TOOLS = {
             file: {
               url: downloadURL,
             },
-            caption: 'fafafa',
           };
         },
         // only work when url has extensions like .jpg
@@ -47,7 +46,6 @@ const TOOLS = {
               file: {
                 url: url,
               },
-              caption: 'fafafa',
             });
           });
         },

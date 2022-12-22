@@ -26,7 +26,7 @@ export default class Ui {
     this.nodes = {
       wrapper: makeDomEl('div', 'flex p-2 items-center justify-between'),
       geomInfoContainer: makeDomEl('div'), // 地名、住所を入れるコンテナ
-      imageContainer: makeDomEl('div', 'relative max-w-xs'), // 画像を入れるコンテナ
+      imageContainer: makeDomEl('div', 'relative max-w-[50%]'), // 画像を入れるコンテナ
       titleContainer: makeDomEl(
         'div',
         'inline-flex items-center rounded bg-cyan-500 px-3 py-2',

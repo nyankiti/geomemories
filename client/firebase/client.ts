@@ -1,6 +1,6 @@
 import { initializeApp, getApps } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
-import { getFirestore } from 'firebase/firestore';
+import { getFirestore, initializeFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 import { getAuth } from 'firebase/auth';
 import { getFunctions } from 'firebase/functions';
@@ -11,7 +11,10 @@ const firebaseConfig = JSON.parse(
 
 // Initialize Firebase
 if (!getApps().length) {
-  initializeApp(firebaseConfig);
+  const app = initializeApp(firebaseConfig);
+  initializeFirestore(app, {
+    ignoreUndefinedProperties: true,
+  });
 }
 // export const analytics = getAnalytics();
 export const db = getFirestore();
