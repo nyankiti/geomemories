@@ -108,6 +108,7 @@ const BlockEditor = ({ savedBlocks }: Props) => {
       } else {
         notifier.show({
           message: '通信エラーが発生しました。時間をおいて再度試してください',
+          style: 'error',
         });
       }
       setIsSaveLoading(false);

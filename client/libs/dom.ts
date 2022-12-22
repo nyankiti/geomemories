@@ -29,7 +29,7 @@ export const makeSVGEl = (
   if (Array.isArray(classNames)) {
     svgEl.classList.add(...classNames);
   } else if (classNames) {
-    svgEl.classList.add(classNames);
+    svgEl.setAttribute('class', classNames);
   }
 
   for (const attrName in attributes) {

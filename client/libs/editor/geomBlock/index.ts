@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { GeometoryObject, InitialGeometoryObj } from 'entities/geometory';
+import { GeometoryObject } from 'entities/geometory';
 import {
   API,
   ToolConfig,
@@ -34,6 +34,7 @@ export default class GeomBlock {
     this.ui = new Ui({
       api,
       onSelectFile: () => this.onSelectedFile(),
+      onClickClose: () => this.onClickClose(),
       initialImageUrl: this.data.imageUrl,
     });
   }
@@ -107,13 +108,7 @@ export default class GeomBlock {
     // ユーザーにフォルダを表示して、ファイルを選択させる
     const files = await ajax.selectFiles({ accept: 'image/*' });
 
-    // 選択したファイルを読み込む
-    const reader = new FileReader();
-    reader.readAsDataURL(files[0]);
-    reader.onload = (e) => {
-      // base64 encodingされた画像データが入っている
-      this.ui.showPreloader(e.target?.result as string);
-    };
+    this.ui.showLoader();
 
     try {
       // storageに保存
@@ -124,11 +119,24 @@ export default class GeomBlock {
       const uploadTask = await uploadBytes(storageRef, files[0], metadata);
       const downloadURL = await getDownloadURL(uploadTask.ref);
 
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+
       // アップロードされた画像を反映する
       this.data = { ...this.data, imageUrl: downloadURL };
       this.ui.fillImage(downloadURL);
     } catch (e) {
-      console.log(e);
+      this.ui.hideErrorShowFileButton();
+      this.api.notifier.show({
+        message: '通信エラーが発生しました。時間をおいて再度試してください',
+        style: 'error',
+      });
     }
   };
+
+  onClickClose() {
+    // imageUrlをdataから省く
+    const { imageUrl: _, ...rest } = this.data;
+    this.data = rest;
+    this.ui.eraseCloseShowFileButton();
+  }
 }
