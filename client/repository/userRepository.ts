@@ -37,12 +37,15 @@ export const updateAuthPhotoUrl = async (photoURL: string) => {
   auth.currentUser && (await updateProfile(auth.currentUser, { photoURL }));
 };
 
+// 未ログインのユーザーが保存した場合
 export const addBlocks = async (id: string, blockData: OutputBlockData[]) => {
   const colRef = collection(db, 'users', id, 'blocks');
   try {
     // プロトタイプ版は、1人一つで、user id と同じ id の blocks サブコレクションにデータを保存する
     await setDoc(doc(colRef, id), {
+      id: id,
       data: blockData,
+      title: '最初のアルバム',
       updatedAt: Timestamp.now(),
     });
     return true;

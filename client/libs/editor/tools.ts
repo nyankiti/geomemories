@@ -11,7 +11,7 @@ import {
   uploadString,
   uploadBytes,
 } from '@firebase/storage';
-import { getFileEtension } from 'libs/file';
+import { getFileEtension } from 'utils/file';
 import MyImageTool from './MyImageTool';
 
 const TOOLS = {

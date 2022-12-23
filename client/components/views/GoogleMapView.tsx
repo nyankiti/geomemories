@@ -17,8 +17,8 @@ import {
   InitialGeometoryObj,
 } from 'entities/geometory';
 /* globalState */
-import { usePassedGeomObjSetter } from 'components/globalState/passedGeomObjState';
-import { useMarkersSelectorValue } from 'components/globalState/blockDataState';
+import { usePassedGeomObjSetter } from 'globalState/passedGeomObjState';
+import { useMarkersSelectorValue } from 'globalState/blockDataState';
 /* const */
 import { BASE_COLOR } from 'libs/globalConst';
 

@@ -1,7 +1,7 @@
 import { API } from '@editorjs/editorjs';
 import { GeometoryObject } from 'entities/geometory';
 /* utils */
-import { makeDomEl, makeSVGEl } from 'libs/dom';
+import { makeDomEl, makeSVGEl } from 'utils/dom';
 
 export default class Ui {
   api: API;

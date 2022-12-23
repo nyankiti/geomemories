@@ -16,7 +16,7 @@ const ajax = require('@codexteam/ajax');
 /* firestorage */
 import { storage } from '../../../firebase/client';
 import { getDownloadURL, ref, uploadBytes } from '@firebase/storage';
-import { getFileEtension } from 'libs/file';
+import { getFileEtension } from 'utils/file';
 
 const GuideText = '';
 
@@ -107,6 +107,13 @@ export default class GeomBlock {
 
     // ユーザーにフォルダを表示して、ファイルを選択させる
     const files = await ajax.selectFiles({ accept: 'image/*' });
+
+    // ユーザー登録していない場合は、以下のようなロジックを組んでpreloadだけ表示するようにする
+    // const reader = new FileReader()
+    // reader.readAsDataURL(files[0])
+    // reader.onload = (e) => {
+    //   this.ui.fillImage(e.target?.result)
+    // }
 
     this.ui.showLoader();
 

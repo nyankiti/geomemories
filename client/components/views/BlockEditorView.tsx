@@ -12,8 +12,8 @@ const DragDrop = require('editorjs-drag-drop');
 const Undo = require('editorjs-undo');
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 /* globalState */
-import { useBlockDataState } from 'components/globalState/blockDataState';
-import { usePassedGeomObjValue } from 'components/globalState/passedGeomObjState';
+import { useBlockDataState } from 'globalState/blockDataState';
+import { usePassedGeomObjValue } from 'globalState/passedGeomObjState';
 /* utils */
 import { isObjectEmpty } from 'utils/object';
 /* repository */

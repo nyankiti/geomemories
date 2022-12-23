@@ -1,7 +1,8 @@
 import { initializeApp, cert, getApps } from 'firebase-admin/app';
-import { getFirestore, Timestamp } from 'firebase-admin/firestore';
+import { getFirestore } from 'firebase-admin/firestore';
 import { getAuth } from 'firebase-admin/auth';
 import { OutputBlockData } from '@editorjs/editorjs';
+import { buildFirestoreBlock, FirestoreBlock } from 'entities/block';
 
 if (!getApps()?.length) {
   initializeApp({
@@ -15,23 +16,59 @@ if (!getApps()?.length) {
 export const adminDB = getFirestore();
 export const adminAuth = getAuth();
 
-export const getBlocks = async (
-  id: string,
-): Promise<{ data: OutputBlockData[]; updateAt: Timestamp } | null> => {
-  // const colRef = collection(db, 'users', id, 'blocks');
-  const docRef = adminDB
-    .collection('users')
-    .doc(id)
-    .collection('blocks')
-    .doc(id);
-
+export const getBlock = async (
+  userId: string,
+  blockId: string,
+): Promise<FirestoreBlock | null> => {
   try {
+    const docRef = adminDB
+      .collection('users')
+      .doc(userId)
+      .collection('blocks')
+      .doc(blockId);
+
     const snap = await docRef.get();
     if (snap.exists) {
-      return snap.data() as { data: OutputBlockData[]; updateAt: Timestamp };
+      return buildFirestoreBlock(snap.data());
     }
   } catch (e) {
     console.log(e);
   }
   return null;
+};
+
+// 指定したユーザーのすべてのアルバムの情報取り出す
+export const getBlocks = async (userId: string) => {
+  const blocks: FirestoreBlock[] = [];
+  const blockColRef = adminDB
+    .collection('users')
+    .doc(userId)
+    .collection('blocks');
+  const snapshot = await blockColRef.get();
+  snapshot.forEach((doc) => {
+    if (doc.exists) {
+      blocks.push(buildFirestoreBlock(doc.data()));
+    }
+  });
+  return blocks;
+};
+
+export const getBlockTitles = async (userId: string) => {
+  const titles: Omit<FirestoreBlock, 'data'>[] = [];
+  const blockColRef = adminDB
+    .collection('users')
+    .doc(userId)
+    .collection('blocks');
+  const snapshot = await blockColRef.get();
+  snapshot.forEach((doc) => {
+    if (doc.exists) {
+      const docData = doc.data();
+      titles.push({
+        id: doc.id,
+        title: docData.title ?? '',
+        updatedAt: docData.updatedAt,
+      });
+    }
+  });
+  return titles;
 };

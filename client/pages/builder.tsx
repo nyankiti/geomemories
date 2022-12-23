@@ -37,7 +37,7 @@ export default Builder;
 // module
 import nookies from 'nookies';
 import { GetServerSideProps } from 'next';
-import { adminAuth, getBlocks } from '../firebase/server';
+import { adminAuth, getBlock } from '../firebase/server';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   try {
@@ -51,7 +51,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     // sessionがない場合はloginページに飛ばす
     if (!user) throw new Error();
 
-    const res = await getBlocks(user.uid);
+    const res = await getBlock(user.uid, user.uid);
 
     if (!res?.data) throw new Error();
 
