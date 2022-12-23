@@ -1,6 +1,5 @@
 import React from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 /* components */
 import UserIcon from 'components/templates/UserIcon';
 import { BiLogIn } from 'react-icons/bi';
@@ -25,7 +24,7 @@ function Header() {
 
         <nav className="nav">
           <ul className="flex items-center">
-            <Link href="/builder" passHref>
+            <Link href={user ? '/myalbums' : '/builder/trial'} passHref>
               <div className="relative block cursor-pointer pl-2 pr-7 hover:text-cyan-700">
                 <FaPhotoVideo className="block" size={30} />
                 <p

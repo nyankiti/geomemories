@@ -4,6 +4,7 @@ import { auth, db } from '../firebase/client';
 /* entities */
 import { User, buildUser } from 'entities/user';
 import { OutputBlockData } from '@editorjs/editorjs';
+import { Album } from 'entities/album';
 
 const usersColRef = collection(db, 'users');
 
@@ -37,17 +38,40 @@ export const updateAuthPhotoUrl = async (photoURL: string) => {
   auth.currentUser && (await updateProfile(auth.currentUser, { photoURL }));
 };
 
-// 未ログインのユーザーが保存した場合
-export const addBlocks = async (id: string, blockData: OutputBlockData[]) => {
-  const colRef = collection(db, 'users', id, 'blocks');
+export const createNewAlbum = async (
+  userId: string,
+  albumObj: Omit<Album, 'id' | 'data' | 'updatedAt'>,
+): Promise<string | null> => {
+  const newDoc = doc(collection(db, 'users', userId, 'albums'));
+  try {
+    await setDoc(newDoc, {
+      ...albumObj,
+      updatedAt: Timestamp.now(),
+      id: newDoc.id,
+    });
+    return newDoc.id;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+};
+
+export const updateAlbums = async (
+  user_id: string,
+  album_id: string,
+  albumObj: Partial<Album>,
+) => {
+  const docRef = doc(db, 'users', user_id, 'albums', album_id);
   try {
     // プロトタイプ版は、1人一つで、user id と同じ id の blocks サブコレクションにデータを保存する
-    await setDoc(doc(colRef, id), {
-      id: id,
-      data: blockData,
-      title: '最初のアルバム',
-      updatedAt: Timestamp.now(),
-    });
+    await setDoc(
+      docRef,
+      {
+        ...albumObj,
+        updatedAt: Timestamp.now(),
+      },
+      { merge: true },
+    );
     return true;
   } catch (e) {
     console.log(e);

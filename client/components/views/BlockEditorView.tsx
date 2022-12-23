@@ -1,31 +1,30 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import React, { memo, useEffect, useId, useRef, useState } from 'react';
 import { nanoid } from 'nanoid';
-import EditorJS, {
-  API,
-  OutputBlockData,
-  EditorConfig,
-} from '@editorjs/editorjs';
+import EditorJS from '@editorjs/editorjs';
 import TOOLS from 'libs/editor/tools';
 import { BLOCK_ID_LEN, i18n } from 'libs/editor/const';
 const DragDrop = require('editorjs-drag-drop');
 const Undo = require('editorjs-undo');
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 /* globalState */
-import { useBlockDataState } from 'globalState/blockDataState';
+import { useBlockSelector, useAlbumState } from 'globalState/albumState';
 import { usePassedGeomObjValue } from 'globalState/passedGeomObjState';
 /* utils */
 import { isObjectEmpty } from 'utils/object';
 /* repository */
-import { addBlocks } from 'repository/userRepository';
+import { updateAlbums } from 'repository/userRepository';
 /* hooks */
 import { useAuth } from 'context/authContext';
+import { Album } from 'entities/album';
 
 type Props = {
-  savedBlocks: OutputBlockData[];
+  savedAlbum: Album;
+  album_id: string;
+  user_id: string;
 };
 
-const BlockEditor = ({ savedBlocks }: Props) => {
+const BlockEditor = ({ savedAlbum, album_id, user_id }: Props) => {
   const editorId = useId();
   const editorRef = useRef<EditorJS>();
   // state
@@ -33,7 +32,8 @@ const BlockEditor = ({ savedBlocks }: Props) => {
   // editor.js の API に実装されているnotifierを外部から呼び出すためのstate
   const [notifier, setNotifier] = useState<{ show: (option: any) => void }>();
   // global state
-  const [blockData, setBlockData] = useBlockDataState();
+  const [blockData, setBlockData] = useBlockSelector();
+  const [album, setAlbum] = useAlbumState();
   const passedGeomObj = usePassedGeomObjValue();
   const { user } = useAuth();
 
@@ -70,7 +70,7 @@ const BlockEditor = ({ savedBlocks }: Props) => {
         holder: editorId,
         tools: TOOLS,
         autofocus: true,
-        data: { blocks: savedBlocks },
+        data: { blocks: savedAlbum.data },
         i18n,
         placeholder: 'Start writing your story...',
         onChange: async (api) => {
@@ -87,7 +87,7 @@ const BlockEditor = ({ savedBlocks }: Props) => {
           // Blockのドラックアンドドロップでの移動が可能になる
           new DragDrop(editor);
           // server side propとして受け取った初期値の反映
-          setBlockData(savedBlocks);
+          setAlbum(savedAlbum);
         },
       });
       editorRef.current = editor;
@@ -100,16 +100,20 @@ const BlockEditor = ({ savedBlocks }: Props) => {
   }, []);
 
   const handlePressSave = async () => {
-    if (user && notifier) {
+    if (user_id == 'trial') {
+      // ユーザーが未ログインだった場合の処理をここに書く
+      console.log('trial user clicked save button');
+    } else if (user) {
       setIsSaveLoading(true);
-      const result = await addBlocks(user?.id, blockData);
+      const result = await updateAlbums(user_id, album_id, album);
       if (result) {
-        notifier.show({ message: '更新しました' });
+        notifier && notifier.show({ message: '更新しました' });
       } else {
-        notifier.show({
-          message: '通信エラーが発生しました。時間をおいて再度試してください',
-          style: 'error',
-        });
+        notifier &&
+          notifier.show({
+            message: '通信エラーが発生しました。時間をおいて再度試してください',
+            style: 'error',
+          });
       }
       setIsSaveLoading(false);
     }

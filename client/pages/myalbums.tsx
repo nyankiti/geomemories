@@ -9,9 +9,10 @@ import { formatTime } from 'utils/time';
 
 type Props = {
   stringifiedAlbums: string;
+  userId: string;
 };
-const Login: NextPage<Props> = ({ stringifiedAlbums }) => {
-  const albums: Omit<FirestoreBlock, 'data'>[] = JSON.parse(stringifiedAlbums);
+const Login: NextPage<Props> = ({ stringifiedAlbums, userId }) => {
+  const albums: Omit<Album, 'data'>[] = JSON.parse(stringifiedAlbums);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
 
   return (
@@ -65,12 +66,12 @@ const Login: NextPage<Props> = ({ stringifiedAlbums }) => {
                     </p>
                   </td>
                   <td className="border-b border-gray-200 bg-white py-5 text-center text-sm">
-                    <Link passHref href={`builer/${album.id}`}>
+                    <Link passHref href={`/builder?album_id=${album.id}`}>
                       <button className="m-2 rounded-full bg-green-200 bg-opacity-50 px-3 py-1 font-semibold leading-tight text-green-900 hover:opacity-60">
                         編集する
                       </button>
                     </Link>
-                    <Link passHref href={`prod/${album.id}`}>
+                    <Link passHref href={`/prod?album_id=${album.id}`}>
                       <button className="m-2 rounded-full bg-blue-200 bg-opacity-50 px-3 py-1 font-semibold leading-tight text-blue-900 hover:opacity-60">
                         見る
                       </button>
@@ -90,7 +91,11 @@ const Login: NextPage<Props> = ({ stringifiedAlbums }) => {
           </button>
         </div>
       </main>
-      <AddAlbumModal visible={modalVisible} setVisible={setModalVisible} />
+      <AddAlbumModal
+        userId={userId}
+        visible={modalVisible}
+        setVisible={setModalVisible}
+      />
     </div>
   );
 };
@@ -100,8 +105,8 @@ export default Login;
 // module
 import nookies from 'nookies';
 import { GetServerSideProps } from 'next';
-import { adminAuth, getBlockTitles } from '../firebase/server';
-import { FirestoreBlock } from 'entities/block';
+import { adminAuth, getAlbumTitles } from '../firebase/server';
+import { Album } from 'entities/album';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   try {
@@ -115,11 +120,12 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     // 未ログイン場合は、loginに飛ばす
     if (!user) throw new Error('no user');
 
-    const albums = await getBlockTitles(user.uid);
+    const albums = await getAlbumTitles(user.uid);
 
     return {
       props: {
         stringifiedAlbums: JSON.stringify(albums),
+        userId: user.uid,
       },
     };
   } catch {

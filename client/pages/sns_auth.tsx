@@ -74,7 +74,7 @@ const SNSAuth: NextPage = () => {
         body: JSON.stringify({ jwt }),
       });
 
-      router.push('/');
+      router.push('/myalbums');
     } else {
       // 各種SNSからのredirectではない場合、トップページに戻す
       router.push('/');

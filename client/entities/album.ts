@@ -1,17 +1,17 @@
 import { OutputBlockData } from '@editorjs/editorjs';
 import { DocumentData, Timestamp } from 'firebase/firestore';
 
-export type FirestoreBlock = {
+export type Album = {
   id: string;
   data: OutputBlockData[];
   title: string;
   updatedAt: { _seconds: number; _nanoseconds: number };
-  startDateString: string;
-  endDateString: string;
+  startDateString?: string;
+  endDateString?: string;
 };
 
-export const buildFirestoreBlock = (docData?: DocumentData): FirestoreBlock => {
-  const block: FirestoreBlock = {
+export const buildAlbum = (docData?: DocumentData): Album => {
+  const block: Album = {
     id: docData?.id ?? '',
     data: docData?.data ?? [],
     title: docData?.title ?? '',
@@ -20,4 +20,11 @@ export const buildFirestoreBlock = (docData?: DocumentData): FirestoreBlock => {
     endDateString: docData?.endDateString,
   };
   return block;
+};
+
+export const initialAlbumData = {
+  id: 'trial',
+  title: 'trial',
+  data: [],
+  updatedAt: { _nanoseconds: 0, _seconds: 0 },
 };

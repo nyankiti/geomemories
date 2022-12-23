@@ -18,7 +18,7 @@ import {
 } from 'entities/geometory';
 /* globalState */
 import { usePassedGeomObjSetter } from 'globalState/passedGeomObjState';
-import { useMarkersSelectorValue } from 'globalState/blockDataState';
+import { useMarkersSelectorValue } from 'globalState/albumState';
 /* const */
 import { BASE_COLOR } from 'libs/globalConst';
 
@@ -108,7 +108,6 @@ const GoogleMapView = () => {
 
   useEffect(() => {
     if (polyLineRef.current && mapRef.current) {
-      console.log('poly initi useEffect');
       polyLineRef.current.setMap(mapRef.current);
     }
   }, [markers]);

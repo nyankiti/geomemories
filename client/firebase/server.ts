@@ -2,7 +2,7 @@ import { initializeApp, cert, getApps } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import { getAuth } from 'firebase-admin/auth';
 import { OutputBlockData } from '@editorjs/editorjs';
-import { buildFirestoreBlock, FirestoreBlock } from 'entities/block';
+import { buildAlbum, Album } from 'entities/album';
 
 if (!getApps()?.length) {
   initializeApp({
@@ -16,20 +16,20 @@ if (!getApps()?.length) {
 export const adminDB = getFirestore();
 export const adminAuth = getAuth();
 
-export const getBlock = async (
+export const getAlbum = async (
   userId: string,
   blockId: string,
-): Promise<FirestoreBlock | null> => {
+): Promise<Album | null> => {
   try {
     const docRef = adminDB
       .collection('users')
       .doc(userId)
-      .collection('blocks')
+      .collection('albums')
       .doc(blockId);
 
     const snap = await docRef.get();
     if (snap.exists) {
-      return buildFirestoreBlock(snap.data());
+      return buildAlbum(snap.data());
     }
   } catch (e) {
     console.log(e);
@@ -38,27 +38,27 @@ export const getBlock = async (
 };
 
 // 指定したユーザーのすべてのアルバムの情報取り出す
-export const getBlocks = async (userId: string) => {
-  const blocks: FirestoreBlock[] = [];
-  const blockColRef = adminDB
+export const getAlbums = async (userId: string) => {
+  const albums: Album[] = [];
+  const albumColRef = adminDB
     .collection('users')
     .doc(userId)
-    .collection('blocks');
-  const snapshot = await blockColRef.get();
+    .collection('albums');
+  const snapshot = await albumColRef.get();
   snapshot.forEach((doc) => {
     if (doc.exists) {
-      blocks.push(buildFirestoreBlock(doc.data()));
+      albums.push(buildAlbum(doc.data()));
     }
   });
-  return blocks;
+  return albums;
 };
 
-export const getBlockTitles = async (userId: string) => {
-  const titles: Omit<FirestoreBlock, 'data'>[] = [];
+export const getAlbumTitles = async (userId: string) => {
+  const titles: Omit<Album, 'data'>[] = [];
   const blockColRef = adminDB
     .collection('users')
     .doc(userId)
-    .collection('blocks');
+    .collection('albums');
   const snapshot = await blockColRef.get();
   snapshot.forEach((doc) => {
     if (doc.exists) {
