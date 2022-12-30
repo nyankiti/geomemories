@@ -10,6 +10,7 @@ const BlockEditorView = dynamic(
   },
 );
 import { initialAlbumData } from 'entities/album';
+import { DEFAULT_LAT_LNG, DEFAULT_ZOOM } from 'entities/geometory';
 
 // このページは未ログインのユーザーしかアクセスされない
 const Trial: NextPage = () => {
@@ -23,7 +24,10 @@ const Trial: NextPage = () => {
       </Head>
 
       <main className="py-4">
-        <GoogleMapView />
+        <GoogleMapView
+          initialZoom={DEFAULT_ZOOM}
+          initialLatLng={DEFAULT_LAT_LNG}
+        />
         <BlockEditorView
           savedAlbum={initialAlbumData}
           user_id={'trial'}

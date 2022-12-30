@@ -42,7 +42,12 @@ const options = {
   zoomControl: true,
 };
 
-const GoogleMapView = () => {
+type Props = {
+  initialLatLng: LatLng;
+  initialZoom: number;
+};
+
+const GoogleMapView = ({ initialLatLng, initialZoom }: Props) => {
   // ref
   const mapRef = useRef<google.maps.Map>();
   const searchBoxRef = useRef<google.maps.places.SearchBox>();
@@ -57,13 +62,7 @@ const GoogleMapView = () => {
   const setPassedGeomObj = usePassedGeomObjSetter();
 
   // 初期center位置は、duseMemoを使わないと、再レンダリング時に初期値に戻ってしまう
-  const center = useMemo<LatLng>(
-    () => ({
-      lat: 34.6089,
-      lng: 135.7306, // とりあえずデフォルトのセンターを斑鳩町に指定。
-    }),
-    [],
-  );
+  const center = useMemo<LatLng>(() => initialLatLng, []);
 
   const handlePlacesChanged = () => {
     // クリックされた地域のデータが手に入る
@@ -129,7 +128,7 @@ const GoogleMapView = () => {
         <GoogleMap
           id="map"
           mapContainerStyle={mapContainerStyle}
-          zoom={8} // デフォルトズーム倍率を指定します。
+          zoom={initialZoom} // デフォルトズーム倍率を指定します。
           center={center}
           options={options}
           onLoad={(ref) => {

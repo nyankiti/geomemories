@@ -5,7 +5,7 @@ import { useAlbumState } from 'globalState/albumState';
 const AlbumTitleForm = () => {
   const [album, setAlbum] = useAlbumState();
   return (
-    <div className="m-6 flex">
+    <div className="m-6 flex flex-col lg:flex-row">
       <div className="mt-2 block">
         <label htmlFor="title" className="mx-2 p-1 text-lg font-semibold">
           地図アルバムのタイトル:
@@ -21,7 +21,7 @@ const AlbumTitleForm = () => {
           }
         />
       </div>
-      <div className="ml-24 flex items-center">
+      <div className="ml-0 mt-8 flex items-center lg:mt-0 lg:ml-24">
         <div className="mx-2">
           <label
             htmlFor="startDateString"

@@ -16,7 +16,7 @@ function Header() {
       <div className="flex h-16 items-center justify-between px-2 font-semibold">
         <h1 className="w-3/12">
           <Link href="/" passHref>
-            <h1 className="cursor-pointer text-3xl font-bold duration-200 hover:text-cyan-700">
+            <h1 className="cursor-pointer text-2xl font-bold duration-200 hover:text-cyan-700 sm:text-3xl">
               GeoMemories
             </h1>
           </Link>

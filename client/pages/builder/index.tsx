@@ -10,14 +10,21 @@ const BlockEditorView = dynamic(
     ssr: false,
   },
 );
-import { OutputBlockData } from '@editorjs/editorjs';
 
 type Props = {
   stringifiedAlbum: string;
+  initialLatLng: LatLng;
+  initialZoom: number;
   album_id: string;
   user_id: string;
 };
-const Builder: NextPage<Props> = ({ stringifiedAlbum, album_id, user_id }) => {
+const Builder: NextPage<Props> = ({
+  stringifiedAlbum,
+  initialLatLng,
+  initialZoom,
+  album_id,
+  user_id,
+}) => {
   const album: Album = JSON.parse(stringifiedAlbum);
   return (
     <div>
@@ -29,7 +36,10 @@ const Builder: NextPage<Props> = ({ stringifiedAlbum, album_id, user_id }) => {
 
       <main className="py-4">
         <AlbumTitleForm />
-        <GoogleMapView />
+        <GoogleMapView
+          initialLatLng={initialLatLng}
+          initialZoom={initialZoom}
+        />
         <BlockEditorView
           savedAlbum={album}
           album_id={album_id}
@@ -47,6 +57,7 @@ import nookies from 'nookies';
 import { GetServerSideProps } from 'next';
 import { adminAuth, getAlbum } from '../../firebase/server';
 import { Album } from 'entities/album';
+import { calcBestFitZoom, calcMeanLatLng, LatLng } from 'entities/geometory';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   try {
@@ -77,9 +88,14 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       };
     }
 
+    const initialLatLng = calcMeanLatLng(album.data);
+    const initialZoom = calcBestFitZoom(album.data);
+
     return {
       props: {
         stringifiedAlbum: JSON.stringify(album),
+        initialLatLng,
+        initialZoom,
         album_id,
         user_id: user.uid,
       },

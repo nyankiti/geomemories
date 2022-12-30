@@ -43,6 +43,29 @@ export const markersSelector = selector<GeometoryObject[]>({
       .filter((v) => v),
 });
 
+// export const meanLatLngSelector = selector<LatLng>({
+//   key: 'meanLatLngSelector',
+//   get: ({ get }) => {
+//     const blocks = get(albumState).data;
+//     let latSum = 0;
+//     let lngSum = 0;
+//     let geomBlockcount = 0;
+//     blocks.forEach((block) => {
+//       if (block.type == 'geom' && block.data.latlng) {
+//         latSum += block.data.latlng.lat;
+//         lngSum += block.data.latlng.lng;
+//         geomBlockcount += 1;
+//       }
+//     });
+//     if (geomBlockcount == 0) {
+//       // とりあえずデフォルトのセンターを斑鳩町に指定。
+//       return { lat: 34.6089, lng: 135.7306 };
+//     } else {
+//       return { lat: latSum / geomBlockcount, lng: lngSum / geomBlockcount };
+//     }
+//   },
+// });
+
 export const useAlbumState = () => {
   return useRecoilState(albumState);
 };
