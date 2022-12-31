@@ -1,10 +1,4 @@
-import React, {
-  useRef,
-  useState,
-  useMemo,
-  useEffect,
-  useCallback,
-} from 'react';
+import React, { useRef, useState, useMemo, useEffect } from 'react';
 import {
   GoogleMap,
   LoadScriptNext,

@@ -94,8 +94,6 @@ const BlockEditor = ({ savedAlbum, album_id, user_id }: Props) => {
     }
     return () => {
       if (editorRef.current && editorRef.current.destroy) {
-        // 自動保存をページを離れた際に行う
-        handlePressSave();
         editorRef.current.destroy();
       }
     };

@@ -4,16 +4,35 @@ import Head from 'next/head';
 import Link from 'next/link';
 /* Components */
 import AddAlbumModal from 'components/templates/AddAlbumModal';
+import DeleteAlbumModal from 'components/templates/DeleteAlbumModal';
 /* utils */
 import { formatTime } from 'utils/time';
+/* entities */
+import { AlbumsWithThumbnail } from '../firebase/server';
 
 type Props = {
-  stringifiedAlbums: string;
+  stringifiedAlbumsWithThumbnail: string;
   userId: string;
 };
-const Login: NextPage<Props> = ({ stringifiedAlbums, userId }) => {
-  const albums: Omit<Album, 'data'>[] = JSON.parse(stringifiedAlbums);
-  const [modalVisible, setModalVisible] = useState<boolean>(false);
+
+export type SelectedAlbum = {
+  index: number;
+  album: Omit<Album, 'data'>;
+};
+
+const Login: NextPage<Props> = ({ stringifiedAlbumsWithThumbnail, userId }) => {
+  // const albums: Omit<Album, 'data'>[] = JSON.parse(stringifiedAlbums);
+  const [albums, setAlbums] = useState<AlbumsWithThumbnail[]>(
+    JSON.parse(stringifiedAlbumsWithThumbnail),
+  );
+  const [modalVisible, setModalVisible] = useState(false);
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [selectedAlbum, setSelectedAlbum] = useState<SelectedAlbum>();
+
+  const handleDeletePress = (selectedAlbum: SelectedAlbum) => {
+    setDeleteModalVisible(true);
+    setSelectedAlbum(selectedAlbum);
+  };
 
   return (
     <div>
@@ -37,28 +56,30 @@ const Login: NextPage<Props> = ({ stringifiedAlbums, userId }) => {
             </tr>
           </thead>
           <tbody>
-            {albums.map((album) => {
+            {albums.map((album, index) => {
               const formatedTime = formatTime(
                 new Date(album.updatedAt._seconds * 1000),
               );
               return (
                 <tr key={album.id}>
                   <td className="border-b border-gray-200 bg-white py-5 text-center text-sm">
-                    {/* <div className="flex items-center"> */}
-                    {/* 最初の画像をデータから取り出してサムネイルにしたい */}
-                    {/* <div className="h-10 w-10 flex-shrink-0">
-                      <img
-                        className="h-full w-full rounded-full"
-                        src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
-                        alt=""
-                      />
-                    </div> */}
-                    <div className="ml-3">
-                      <p className="whitespace-no-wrap font-semibold text-gray-900">
-                        {album.title}
-                      </p>
+                    <div className="flex items-center justify-center">
+                      {/* 最初の画像をデータから取り出してサムネイルにしたい */}
+                      {album.thumbnail.startsWith('http') && (
+                        <div className="-my-4 h-14 w-14 flex-shrink-0">
+                          <img
+                            className="h-full w-full rounded object-contain"
+                            src={album.thumbnail}
+                            alt=""
+                          />
+                        </div>
+                      )}
+                      <div className="ml-3">
+                        <p className="whitespace-no-wrap font-semibold text-gray-900">
+                          {album.title}
+                        </p>
+                      </div>
                     </div>
-                    {/* </div> */}
                   </td>
                   <td className="border-b border-gray-200 bg-white py-5 text-center text-sm">
                     <p className="whitespace-no-wrap text-gray-900">
@@ -76,6 +97,12 @@ const Login: NextPage<Props> = ({ stringifiedAlbums, userId }) => {
                         見る
                       </button>
                     </Link>
+                    <button
+                      onClick={() => handleDeletePress({ index, album })}
+                      className="m-2 rounded-full bg-orange-200 bg-opacity-50 px-3 py-1 font-semibold leading-tight text-orange-900 hover:opacity-60"
+                    >
+                      消す
+                    </button>
                   </td>
                 </tr>
               );
@@ -96,6 +123,13 @@ const Login: NextPage<Props> = ({ stringifiedAlbums, userId }) => {
         visible={modalVisible}
         setVisible={setModalVisible}
       />
+      <DeleteAlbumModal
+        userId={userId}
+        visible={deleteModalVisible}
+        setVisible={setDeleteModalVisible}
+        selectedAlbum={selectedAlbum}
+        setAlbums={setAlbums}
+      />
     </div>
   );
 };
@@ -105,7 +139,7 @@ export default Login;
 // module
 import nookies from 'nookies';
 import { GetServerSideProps } from 'next';
-import { adminAuth, getAlbumTitles } from '../firebase/server';
+import { adminAuth, getAlbumWithThumbnail } from '../firebase/server';
 import { Album } from 'entities/album';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -120,11 +154,11 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     // 未ログイン場合は、loginに飛ばす
     if (!user) throw new Error('no user');
 
-    const albums = await getAlbumTitles(user.uid);
+    const albumsWithThumbnail = await getAlbumWithThumbnail(user.uid);
 
     return {
       props: {
-        stringifiedAlbums: JSON.stringify(albums),
+        stringifiedAlbumsWithThumbnail: JSON.stringify(albumsWithThumbnail),
         userId: user.uid,
       },
     };

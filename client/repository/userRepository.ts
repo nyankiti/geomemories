@@ -1,4 +1,11 @@
-import { collection, doc, getDoc, setDoc, Timestamp } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  getDoc,
+  setDoc,
+  deleteDoc,
+  Timestamp,
+} from 'firebase/firestore';
 import { updateProfile } from 'firebase/auth';
 import { auth, db } from '../firebase/client';
 /* entities */
@@ -72,6 +79,17 @@ export const updateAlbums = async (
       },
       { merge: true },
     );
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+};
+
+export const deleteAlbum = async (user_id: string, album_id: string) => {
+  const docRef = doc(db, 'users', user_id, 'albums', album_id);
+  try {
+    await deleteDoc(docRef);
     return true;
   } catch (e) {
     console.log(e);

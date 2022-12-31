@@ -53,22 +53,36 @@ export const getAlbums = async (userId: string) => {
   return albums;
 };
 
-export const getAlbumTitles = async (userId: string) => {
-  const titles: Omit<Album, 'data'>[] = [];
+export type AlbumsWithThumbnail = Omit<Album, 'data'> & { thumbnail: string };
+
+export const getAlbumWithThumbnail = async (userId: string) => {
+  const albumsWithThumbnail: AlbumsWithThumbnail[] = [];
+
   const blockColRef = adminDB
     .collection('users')
     .doc(userId)
     .collection('albums');
   const snapshot = await blockColRef.get();
+
   snapshot.forEach((doc) => {
     if (doc.exists) {
-      const docData = doc.data();
-      titles.push({
+      const docData = buildAlbum(doc.data());
+      let thumbnailUrl = '';
+      docData.data.forEach((block) => {
+        if (block.type == 'image' && block.data.file && block.data.file.url) {
+          thumbnailUrl = block.data.file.url;
+        } else if (block.type == 'geom' && block.data.imageUrl) {
+          thumbnailUrl = block.data.imageUrl;
+        }
+      });
+
+      albumsWithThumbnail.push({
         id: doc.id,
         title: docData.title ?? '',
         updatedAt: docData.updatedAt,
+        thumbnail: thumbnailUrl,
       });
     }
   });
-  return titles;
+  return albumsWithThumbnail;
 };
