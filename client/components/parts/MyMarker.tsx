@@ -5,7 +5,8 @@ https://developers.google.com/maps/documentation/javascript/examples/marker-acce
 ただし、二つのInfoWindowを一緒に表示することができなくなる。
 */
 import React, { useRef } from 'react';
-import { InfoWindow, Marker } from '@react-google-maps/api';
+// MarkerFを使うとreact18ではうまく動く
+import { InfoWindow, Marker, MarkerF } from '@react-google-maps/api';
 import { GeometoryObject, LatLng } from 'entities/geometory';
 /* const */
 import { BASE_COLOR } from 'libs/globalConst';
@@ -44,7 +45,7 @@ const MyMarker = ({ marker, index }: Props) => {
           )}
         </>
       </InfoWindow>
-      <Marker
+      <MarkerF
         position={marker.latlng}
         onClick={handleMarkerClick}
         animation={google.maps.Animation.DROP}

@@ -57,7 +57,12 @@ import nookies from 'nookies';
 import { GetServerSideProps } from 'next';
 import { adminAuth, getAlbum } from '../../firebase/server';
 import { Album } from 'entities/album';
-import { calcBestFitZoom, calcMeanLatLng, LatLng } from 'entities/geometory';
+import {
+  calcBestFitZoom,
+  calcMeanLatLng,
+  calcMinMaxMeanLatLng,
+  LatLng,
+} from 'entities/geometory';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   try {
@@ -88,7 +93,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       };
     }
 
-    const initialLatLng = calcMeanLatLng(album.data);
+    // const initialLatLng = calcMeanLatLng(album.data);
+    const initialLatLng = calcMinMaxMeanLatLng(album.data);
     const initialZoom = calcBestFitZoom(album.data);
 
     return {

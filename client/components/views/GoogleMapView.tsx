@@ -1,4 +1,10 @@
-import React, { useRef, useState, useMemo, useEffect } from 'react';
+import React, {
+  useRef,
+  useState,
+  useMemo,
+  useEffect,
+  useCallback,
+} from 'react';
 import {
   GoogleMap,
   LoadScriptNext,
@@ -95,15 +101,13 @@ const GoogleMapView = ({ initialLatLng, initialZoom }: Props) => {
     setModalVisible(false);
   };
 
-  const renderMarkers = () => {
-    return (
-      <>
-        {markers.map((marker, i) => {
-          return <MyMarker key={i} marker={marker} index={i} />;
-        })}
-      </>
-    );
-  };
+  const renderMarkers = () => (
+    <>
+      {markers.map((marker, i) => {
+        return <MyMarker key={i} marker={marker} index={i} />;
+      })}
+    </>
+  );
 
   useEffect(() => {
     if (polyLineRef.current && mapRef.current) {

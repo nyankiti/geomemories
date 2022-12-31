@@ -33,6 +33,7 @@ export const InitialGeometoryObj: GeometoryObject = {
 export const DEFAULT_LAT_LNG = { lat: 34.6089, lng: 135.7306 };
 export const DEFAULT_ZOOM = 8;
 
+// 全てのLatLngの平均をとる
 export const calcMeanLatLng = (data: OutputBlockData[]): LatLng => {
   let latSum = 0;
   let lngSum = 0;
@@ -50,6 +51,32 @@ export const calcMeanLatLng = (data: OutputBlockData[]): LatLng => {
     // 少数第五位を四捨五入する
     const lat = Math.round((latSum / geomBlockcount) * 10000) / 10000;
     const lng = Math.round((lngSum / geomBlockcount) * 10000) / 10000;
+    return { lat, lng };
+  }
+};
+
+// Lat, Lngそれぞれの最大値、最小値を取得し、その間を返す
+export const calcMinMaxMeanLatLng = (data: OutputBlockData[]): LatLng => {
+  let max_lat = -90,
+    min_lat = 90,
+    max_lng = -180,
+    min_lng = 180,
+    geomBlockcount = 0;
+  data.forEach((block) => {
+    if (block.type == 'geom' && block.data.latlng) {
+      max_lat = Math.max(max_lat, block.data.latlng.lat);
+      min_lat = Math.min(min_lat, block.data.latlng.lat);
+      max_lng = Math.max(max_lng, block.data.latlng.lng);
+      min_lng = Math.min(min_lng, block.data.latlng.lng);
+      geomBlockcount += 1;
+    }
+  });
+  if (geomBlockcount == 0) {
+    return DEFAULT_LAT_LNG;
+  } else {
+    // 少数第五位を四捨五入する
+    const lat = Math.round(((max_lat + min_lat) / 2) * 10000) / 10000;
+    const lng = Math.round(((max_lng + min_lng) / 2) * 10000) / 10000;
     return { lat, lng };
   }
 };
