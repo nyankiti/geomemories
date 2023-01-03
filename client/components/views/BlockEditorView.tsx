@@ -69,6 +69,8 @@ const BlockEditor = ({ savedAlbum, album_id, user_id }: Props) => {
       const editor = new EditorJS({
         holder: editorId,
         tools: TOOLS,
+        // duplicateはいつか実装したい
+        // tunes: ['duplicate'],
         autofocus: true,
         data: { blocks: savedAlbum.data },
         i18n,

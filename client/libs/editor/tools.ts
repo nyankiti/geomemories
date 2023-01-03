@@ -4,17 +4,15 @@ const List = require('@editorjs/list');
 const Quote = require('@editorjs/quote');
 import GeomBlock from './geomBlock';
 import { storage } from '../../firebase/client';
-import {
-  deleteObject,
-  getDownloadURL,
-  ref,
-  uploadString,
-  uploadBytes,
-} from '@firebase/storage';
+import { getDownloadURL, ref, uploadBytes } from '@firebase/storage';
 import { getFileEtension } from 'utils/file';
+/* editor tool, tune */
 import MyImageTool from './MyImageTool';
+import { MyDuplicateTune } from './MyDuplicateTune';
 
 const TOOLS = {
+  // duplicateはいつか実装したい
+  // duplicate: MyDuplicateTune,
   geom: GeomBlock,
   header: {
     class: Header,

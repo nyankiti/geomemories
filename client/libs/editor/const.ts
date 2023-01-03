@@ -1,4 +1,4 @@
-import { I18nConfig, I18nDictionary } from '@editorjs/editorjs';
+import { I18nConfig } from '@editorjs/editorjs';
 export const BLOCK_ID_LEN = 10;
 
 export const i18n: I18nConfig = {
@@ -45,6 +45,9 @@ export const i18n: I18nConfig = {
       },
       moveDown: {
         'Move down': '下に移動',
+      },
+      duplicate: {
+        Duplicate: '複製する',
       },
     },
     tools: {
