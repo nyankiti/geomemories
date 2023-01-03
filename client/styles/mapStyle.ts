@@ -1,3 +1,9 @@
+// 地図の大きさを指定します。
+export const mapContainerStyle = {
+  height: '60vh',
+  width: '100%',
+};
+
 // 地図のデザインは https://snazzymaps.com から探せる。
 // WY というデザインを利用している
 export const mapStyles = [

@@ -5,7 +5,7 @@ import {
   StandaloneSearchBox,
   Polyline,
 } from '@react-google-maps/api';
-import { mapStyles } from 'styles/mapStyle';
+import { mapStyles, mapContainerStyle } from 'styles/mapStyle';
 /* components */
 import MapSearchBar from 'components/templates/MapSearchBar';
 import SpotPickModal from 'components/templates/SpotPickModal';
@@ -22,11 +22,6 @@ import { useMarkersSelectorValue } from 'globalState/albumState';
 /* const */
 import { BASE_COLOR } from 'libs/globalConst';
 
-// 地図の大きさを指定します。
-const mapContainerStyle = {
-  height: '60vh',
-  width: '100%',
-};
 const libraries: (
   | 'places'
   | 'drawing'

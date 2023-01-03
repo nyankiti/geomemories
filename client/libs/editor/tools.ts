@@ -56,7 +56,7 @@ const TOOLS = {
       defaultStyle: 'unordered',
     },
   },
-  quote: Quote,
+  // quote: Quote,
 };
 
 export default TOOLS;

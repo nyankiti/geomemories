@@ -78,6 +78,9 @@ export const useAlbumStateSetter = () => {
 export const useBlockSelector = () => {
   return useRecoilState(blockSelector);
 };
+export const useBlockSelectorValue = () => {
+  return useRecoilValue(blockSelector);
+};
 export const useMarkersSelectorValue = () => {
   return useRecoilValue(markersSelector);
 };
