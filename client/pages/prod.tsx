@@ -2,6 +2,8 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
 import { useEffect } from 'react';
+/* globalState */
+import { useProdMapStateSetter } from 'globalState/prodMapState';
 /* Components */
 const ProdMapView = dynamic(() => import('components/views/ProdMapView'), {
   ssr: false,
@@ -24,6 +26,14 @@ const Prod: NextPage<Props> = ({
 }) => {
   const savedAlbum: Album = JSON.parse(stringifiedAlbum);
 
+  const setProdMapState = useProdMapStateSetter();
+  useEffect(() => {
+    setProdMapState({
+      position: [initialLatLng.lat as number, initialLatLng.lng as number],
+      zoom: initialZoom,
+    });
+  }, []);
+
   return (
     <div>
       <Head>
@@ -31,6 +41,17 @@ const Prod: NextPage<Props> = ({
         <meta name="description" content="地図アルバムで質の高い思い出を" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <button
+        className="rounded bg-indigo-500 p-4 hover:opacity-50"
+        onClick={() => {
+          setProdMapState({
+            position: [34.6089, 135.7306],
+            zoom: 10,
+          });
+        }}
+      >
+        移動
+      </button>
 
       <main className="py-4">
         <ProdMapView

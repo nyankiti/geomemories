@@ -11,9 +11,7 @@ export default function Home() {
       </Head>
 
       <main>
-        <h1 className="mt-10 text-center text-red-500">
-          Welcome to Geomemories
-        </h1>
+        <h1 className="mt-10 text-center">Welcome to Geomemories</h1>
       </main>
 
       <footer></footer>
