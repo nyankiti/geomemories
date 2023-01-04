@@ -1,12 +1,12 @@
 import React from 'react';
-/* global state */
+/* globalState */
 import { useAlbumState } from 'globalState/albumState';
 
 const AlbumTitleForm = () => {
   const [album, setAlbum] = useAlbumState();
   return (
-    <div className="m-6 flex flex-col lg:flex-row">
-      <div className="mt-2 block">
+    <div className="m-6 flex flex-col items-center lg:flex-row lg:items-start">
+      <div className="mt-2 block text-center">
         <label htmlFor="title" className="mx-2 p-1 text-lg font-semibold">
           地図アルバムのタイトル:
         </label>

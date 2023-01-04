@@ -22,9 +22,8 @@ const Prod: NextPage<Props> = ({
   initialLatLng,
   initialZoom,
   album_id,
-  user_id,
 }) => {
-  const savedAlbum: Album = JSON.parse(stringifiedAlbum);
+  const album: Album = JSON.parse(stringifiedAlbum);
 
   const setProdMapState = useProdMapStateSetter();
   useEffect(() => {
@@ -41,23 +40,11 @@ const Prod: NextPage<Props> = ({
         <meta name="description" content="地図アルバムで質の高い思い出を" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <button
-        className="rounded bg-indigo-500 p-4 hover:opacity-50"
-        onClick={() => {
-          setProdMapState({
-            position: [34.6089, 135.7306],
-            zoom: 10,
-          });
-        }}
-      >
-        移動
-      </button>
-
       <main className="py-4">
         <ProdMapView
           initialLatLng={initialLatLng}
           initialZoom={initialZoom}
-          markers={savedAlbum.data
+          markers={album.data
             .map((block) => {
               // 緯度経度が存在しないダミーのgeom blockを含めない
               if (block.type == 'geom' && block.data.latlng) {
@@ -66,7 +53,7 @@ const Prod: NextPage<Props> = ({
             })
             .filter((v) => v)}
         />
-        <ProdBlockView album={savedAlbum} />
+        <ProdBlockView album={album} />
       </main>
     </div>
   );
@@ -125,7 +112,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
         initialLatLng,
         initialZoom,
         album_id,
-        user_id: user.uid,
       },
     };
   } catch (e) {

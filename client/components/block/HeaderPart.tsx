@@ -2,7 +2,7 @@ import React from 'react';
 import { OutputBlockData } from '@editorjs/editorjs';
 
 type Props = {
-  block: OutputBlockData<string, any>;
+  block: OutputBlockData;
 };
 const HeaderPart = ({ block }: Props) => {
   return <div>HeaderPart</div>;

@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 import { OutputBlockData } from '@editorjs/editorjs';
 import { GeometoryObject } from 'entities/geometory';
+import { FaMapMarkerAlt } from 'react-icons/fa';
 /* globalState */
 import { useProdMapStateSetter } from 'globalState/prodMapState';
 
 type Props = {
-  block: OutputBlockData<string, any>;
+  block: OutputBlockData;
 };
 const GeomPart = ({ block }: Props) => {
   const setProdMapState = useProdMapStateSetter();
@@ -17,7 +18,11 @@ const GeomPart = ({ block }: Props) => {
     });
   }, [block]);
   return (
-    <div>
+    <div className="my-4">
+      <div className="inline-flex w-full items-center justify-center">
+        <FaMapMarkerAlt className="mr-2 text-cyan-700" size={28} />
+        <h2 className="text-2xl font-normal">{geomObj.name}</h2>
+      </div>
       <p>{geomObj.formatted_address}</p>
     </div>
   );

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import React, { memo, useEffect, useId, useRef, useState } from 'react';
+import { useRouter } from 'next/router';
 import { nanoid } from 'nanoid';
 import EditorJS from '@editorjs/editorjs';
 import TOOLS from 'libs/editor/tools';
@@ -26,6 +27,7 @@ type Props = {
 
 const BlockEditor = ({ savedAlbum, album_id, user_id }: Props) => {
   const editorId = useId();
+  const router = useRouter();
   const editorRef = useRef<EditorJS>();
   // state
   const [isSaveLoading, setIsSaveLoading] = useState(false);
@@ -85,9 +87,9 @@ const BlockEditor = ({ savedAlbum, album_id, user_id }: Props) => {
         },
         onReady: () => {
           // On the editor, use Ctrl + Z or ⌘ + Z to undo, or use Ctrl + Y or ⌘ + Y to redo.
-          new Undo({ editor });
+          editor && new Undo({ editor });
           // Blockのドラックアンドドロップでの移動が可能になる
-          new DragDrop(editor);
+          editor && new DragDrop(editor);
           // server side propとして受け取った初期値の反映
           setAlbum(savedAlbum);
         },
@@ -123,7 +125,7 @@ const BlockEditor = ({ savedAlbum, album_id, user_id }: Props) => {
 
   return (
     <div className="">
-      <div className="p-2 text-center">
+      <div className="flex flex-col items-center justify-center px-2 py-4 sm:flex-row">
         <p className="text-lg">
           地図アルバムを作ろう(
           <a className="cursor-pointer text-blue-400 hover:underline">
@@ -131,6 +133,15 @@ const BlockEditor = ({ savedAlbum, album_id, user_id }: Props) => {
           </a>
           )
         </p>
+        <button
+          onClick={() => {
+            handlePressSave();
+            router.push(`/prod?album_id=${savedAlbum.id}`);
+          }}
+          className="m-2 rounded-full bg-blue-200 bg-opacity-50 px-3 py-1 font-semibold leading-tight text-blue-900 hover:opacity-60 sm:ml-12"
+        >
+          アルバムを見る
+        </button>
       </div>
       {/* 以下の div 要素に editor.js がマウントされる */}
       <div id={editorId} />

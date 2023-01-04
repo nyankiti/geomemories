@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { OutputBlockData } from '@editorjs/editorjs';
 
 type Props = {
-  block: OutputBlockData<string, any>;
+  block: OutputBlockData;
 };
 const ImagePart = ({ block }: Props) => {
   return (

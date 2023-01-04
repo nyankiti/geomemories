@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { ReactNode, useState } from 'react';
+import React, { Fragment, ReactNode, useState } from 'react';
+import Link from 'next/link';
 import { Album } from 'entities/album';
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from 'react-icons/md';
 /* components */
@@ -14,23 +15,59 @@ import clsx from 'clsx';
 
 // ブロックのタイプごとにコンポーネントを管理するオブジェクト
 const renderer: {
-  [key: string]: (block: OutputBlockData<string, any>) => ReactNode;
+  [key: string]: (block: OutputBlockData) => ReactNode;
 } = {
-  paragraph: (block: OutputBlockData<string, any>) => (
-    <ParagraphPart block={block} />
-  ),
-  image: (block: OutputBlockData<string, any>) => <ImagePart block={block} />,
-  header: (block: OutputBlockData<string, any>) => <HeaderPart block={block} />,
-  list: (block: OutputBlockData<string, any>) => <ListPart block={block} />,
-  geom: (block: OutputBlockData<string, any>) => <GeomPart block={block} />,
+  paragraph: (block: OutputBlockData) => <ParagraphPart block={block} />,
+  image: (block: OutputBlockData) => <ImagePart block={block} />,
+  header: (block: OutputBlockData) => <HeaderPart block={block} />,
+  list: (block: OutputBlockData) => <ListPart block={block} />,
+  geom: (block: OutputBlockData) => <GeomPart block={block} />,
 };
 
 type Props = {
   album: Album;
 };
 
+const buildPageData = (data: OutputBlockData[]) => {
+  const result = [];
+  let i = 0;
+  while (i < data.length) {
+    const temp = [];
+    temp.push(data[i]);
+    i++;
+    while (i < data.length && data[i].type != 'geom') {
+      temp.push(data[i]);
+      i++;
+    }
+    result.push(temp);
+  }
+  return result;
+};
+
 const ProdBlockView = ({ album }: Props) => {
   const [currentPage, setCurrentPage] = useState(0);
+  // geomBlockを区切りでページ分けする
+  const pageData = buildPageData(album.data);
+
+  const renderContents = () => {
+    if (pageData.length == 0) {
+      return (
+        <>
+          <p className=" text-gray-700">地図アルバムの内容がありません</p>
+          <Link
+            href={`/builder?album_id=${album.id}`}
+            className="text-blue-600 underline"
+          >
+            こちらから地図アルバムを作成しよう!
+          </Link>
+        </>
+      );
+    } else {
+      return pageData[currentPage].map((block, i) => {
+        return <Fragment key={i}>{renderer[block.type](block)}</Fragment>;
+      });
+    }
+  };
 
   return (
     <div className="my-12 flex flex-col items-center">
@@ -40,9 +77,7 @@ const ProdBlockView = ({ album }: Props) => {
           ? album.startDateString + '~' + album.endDateString
           : album.startDateString}
       </p>
-      <div>
-        {renderer[album.data[currentPage].type](album.data[currentPage])}
-      </div>
+      <div>{renderContents()}</div>
       <ul className="flex items-center p-4">
         <li className="px-[6px]">
           <button
@@ -52,7 +87,7 @@ const ProdBlockView = ({ album }: Props) => {
             <MdKeyboardArrowLeft size={32} />
           </button>
         </li>
-        {album.data.map((_, i) => {
+        {pageData.map((_, i) => {
           return (
             <li key={i} className="px-[6px]">
               <button
@@ -73,9 +108,7 @@ const ProdBlockView = ({ album }: Props) => {
         <li className="px-[6px]">
           <button
             onClick={() =>
-              setCurrentPage((prev) =>
-                Math.min(album.data.length - 1, prev + 1),
-              )
+              setCurrentPage((prev) => Math.min(pageData.length - 1, prev + 1))
             }
             className="flex h-9 w-9 items-center justify-center rounded-md border border-gray-200 text-base text-[#838995] hover:opacity-50"
           >

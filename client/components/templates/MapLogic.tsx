@@ -9,7 +9,6 @@ const MapLogic = () => {
   const prodMapState = useProdMapStateValue();
 
   useEffect(() => {
-    console.log('called');
     map.flyTo(prodMapState.position, prodMapState.zoom, {
       animate: true,
     });

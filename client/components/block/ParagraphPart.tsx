@@ -2,7 +2,7 @@ import React from 'react';
 import { OutputBlockData } from '@editorjs/editorjs';
 
 type Props = {
-  block: OutputBlockData<string, any>;
+  block: OutputBlockData;
 };
 const ParagraphPart = ({ block }: Props) => {
   const text = block.data.text.replace(/<br>/g, '\n');
