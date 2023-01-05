@@ -35,7 +35,8 @@ const ProdMapView = ({ initialLatLng, initialZoom, markers }: Props) => {
       // leftletで適切なinitialZoomの算出し直す必要がある
       zoom={initialZoom + 1}
       scrollWheelZoom={false}
-      style={mapContainerStyle}
+      // style={mapContainerStyle}
+      style={{ height: '40vh', width: '100%' }}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'

@@ -70,8 +70,8 @@ import {
   calcBestFitZoom,
   calcMinMaxMeanLatLng,
   LatLng,
+  getFirstGeomLatLng,
 } from 'entities/geometory';
-import BlockEditorView from 'components/views/BlockEditorView';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   try {
@@ -102,9 +102,10 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       };
     }
 
-    // const initialLatLng = calcMeanLatLng(album.data);
-    const initialLatLng = calcMinMaxMeanLatLng(album.data);
-    const initialZoom = calcBestFitZoom(album.data);
+    // const initialLatLng = calcMinMaxMeanLatLng(album.data);
+    const initialLatLng = getFirstGeomLatLng(album.data);
+    // const initialZoom = calcBestFitZoom(album.data);
+    const initialZoom = 12;
 
     return {
       props: {

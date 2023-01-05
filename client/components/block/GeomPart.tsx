@@ -23,7 +23,7 @@ const GeomPart = ({ block }: Props) => {
         <FaMapMarkerAlt className="mr-2 text-cyan-700" size={28} />
         <h2 className="text-2xl font-normal">{geomObj.name}</h2>
       </div>
-      <p>{geomObj.formatted_address}</p>
+      <p className="text-center">{geomObj.formatted_address}</p>
     </div>
   );
 };

@@ -81,7 +81,8 @@ export const calcMinMaxMeanLatLng = (data: OutputBlockData[]): LatLng => {
   }
 };
 
-export const calcBestFitZoom = (data: OutputBlockData[]): number => {
+// 最初の地点の座標を返す
+export const getFirstGeomLatLng = (data: OutputBlockData[]): LatLng => {
   const latLngArray: LatLng[] = [];
   data.forEach((block) => {
     if (block.type == 'geom' && block.data.latlng) {
@@ -92,6 +93,23 @@ export const calcBestFitZoom = (data: OutputBlockData[]): number => {
     }
   });
   if (latLngArray.length == 0) {
+    return DEFAULT_LAT_LNG;
+  } else {
+    return latLngArray[0];
+  }
+};
+
+export const calcBestFitZoom = (data: OutputBlockData[]): number => {
+  const latLngArray: LatLng[] = [];
+  data.forEach((block) => {
+    if (block.type == 'geom' && block.data.latlng) {
+      latLngArray.push({
+        lat: block.data.latlng.lat,
+        lng: block.data.latlng.lng,
+      });
+    }
+  });
+  if (latLngArray.length <= 1) {
     // geometoryObjectがない場合は、デフォルト値を返す
     return DEFAULT_ZOOM;
   } else {

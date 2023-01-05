@@ -9,6 +9,7 @@ import ImagePart from 'components/block/ImagePart';
 import GeomPart from 'components/block/GeomPart';
 import ListPart from 'components/block/ListPart';
 import HeaderPart from 'components/block/HeaderPart';
+import Pagination from 'components/templates/Pagination';
 /* types */
 import { OutputBlockData } from '@editorjs/editorjs';
 import clsx from 'clsx';
@@ -71,41 +72,24 @@ const ProdBlockView = ({ album }: Props) => {
 
   return (
     <div className="my-12 flex flex-col items-center">
-      <h1>{album.title}</h1>
-      <p className="p-1">
-        {album.startDateString != album.endDateString
-          ? album.startDateString + '~' + album.endDateString
-          : album.startDateString}
-      </p>
-      <div>{renderContents()}</div>
-      <ul className="flex items-center p-4">
-        <li className="px-[6px]">
+      <div className="flex">
+        <div className="px-6">
           <button
             onClick={() => setCurrentPage((prev) => Math.max(0, prev - 1))}
             className="flex h-9 w-9 items-center justify-center rounded-md border border-gray-200 text-base text-[#838995] hover:opacity-50"
           >
             <MdKeyboardArrowLeft size={32} />
           </button>
-        </li>
-        {pageData.map((_, i) => {
-          return (
-            <li key={i} className="px-[6px]">
-              <button
-                onClick={() => setCurrentPage(i)}
-                className={clsx(
-                  'flex h-9 w-9 items-center justify-center rounded-md border border-gray-200 text-base hover:opacity-50',
-                  currentPage == i
-                    ? 'bg-blue-50 text-blue-500'
-                    : 'text-[#838995]',
-                )}
-              >
-                {i + 1}
-              </button>
-            </li>
-          );
-        })}
-
-        <li className="px-[6px]">
+        </div>
+        <div>
+          <h1>{album.title}</h1>
+          <p className="p-1">
+            {album.startDateString != album.endDateString
+              ? album.startDateString + '~' + album.endDateString
+              : album.startDateString}
+          </p>
+        </div>
+        <div className="px-6">
           <button
             onClick={() =>
               setCurrentPage((prev) => Math.min(pageData.length - 1, prev + 1))
@@ -114,8 +98,14 @@ const ProdBlockView = ({ album }: Props) => {
           >
             <MdKeyboardArrowRight size={32} />
           </button>
-        </li>
-      </ul>
+        </div>
+      </div>
+      <div className="mx-4 flex max-w-4xl flex-col">{renderContents()}</div>
+      <Pagination
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+        pageNumbers={[...Array(pageData.length)].map((_, i) => i)}
+      />
     </div>
   );
 };
