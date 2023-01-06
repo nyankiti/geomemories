@@ -81,7 +81,7 @@ const ProdBlockView = ({ album }: Props) => {
             <MdKeyboardArrowLeft size={32} />
           </button>
         </div>
-        <div>
+        <div className="text-center">
           <h1>{album.title}</h1>
           <p className="p-1">
             {album.startDateString != album.endDateString

@@ -7,8 +7,14 @@ type Props = {
 };
 const ImagePart = ({ block }: Props) => {
   return (
-    <div>
-      <Image src={block.data.file.url} alt="image" width={300} height={300} />
+    <div className="m-2 flex items-center justify-center">
+      <Image
+        className="rounded-md"
+        src={block.data.file.url}
+        alt="image"
+        width={300}
+        height={300}
+      />
     </div>
   );
 };

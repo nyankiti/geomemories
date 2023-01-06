@@ -15,13 +15,14 @@ type Props = {
   initialLatLng: LatLng;
   initialZoom: number;
   album_id: string;
-  user_id: string;
+  share_url: string;
 };
 const Prod: NextPage<Props> = ({
   stringifiedAlbum,
   initialLatLng,
   initialZoom,
   album_id,
+  share_url,
 }) => {
   const album: Album = JSON.parse(stringifiedAlbum);
 
@@ -41,6 +42,7 @@ const Prod: NextPage<Props> = ({
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="py-4">
+        <p>共有用url: {share_url}</p>
         <ProdMapView
           initialLatLng={initialLatLng}
           initialZoom={initialZoom}
@@ -78,19 +80,24 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     const cookies = nookies.get(ctx);
     const session = cookies.session || '';
 
-    const user = await adminAuth
-      .verifySessionCookie(session, true)
-      .catch(() => null);
+    // sessionがない かつ uidがクエリで渡されていない場合はloginページに飛ばす
+    let user_id = ctx.query.uid as string | undefined;
 
-    // sessionがない場合はloginページに飛ばす
-    if (!user) throw new Error();
+    console.log(user_id);
+    if (!user_id) {
+      const user = await adminAuth
+        .verifySessionCookie(session, true)
+        .catch(() => null);
+      if (!user) throw new Error();
+      user_id = user.uid;
+    }
 
     const album_id = ctx.query.album_id;
     if (!album_id || Array.isArray(album_id)) {
       throw new Error('queryパラメータがありません');
     }
 
-    const album = await getAlbum(user.uid, album_id);
+    const album = await getAlbum(user_id, album_id);
 
     if (!album) {
       // データが取得できなかった場合はマイアルバムページへリダイレクト
@@ -113,6 +120,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
         initialLatLng,
         initialZoom,
         album_id,
+        share_url: `/prod?album_id=${album_id}&uid=${user_id}`,
       },
     };
   } catch (e) {
