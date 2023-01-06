@@ -1,6 +1,8 @@
 import React from 'react';
 /* globalState */
 import { useAlbumState } from 'globalState/albumState';
+/* utils */
+import { getDateString } from 'utils/time';
 
 const AlbumTitleForm = () => {
   const [album, setAlbum] = useAlbumState();
@@ -33,7 +35,7 @@ const AlbumTitleForm = () => {
             type="date"
             name="startDateString"
             className="block rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-            value={album.startDateString ?? '2000-01-01'}
+            value={album.startDateString ?? getDateString(new Date())}
             onChange={(e) =>
               setAlbum((prev) => ({ ...prev, startDateString: e.target.value }))
             }
@@ -50,7 +52,7 @@ const AlbumTitleForm = () => {
             type="date"
             name="endDateString"
             className="block rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-            value={album.endDateString ?? '2000-01-01'}
+            value={album.endDateString ?? getDateString(new Date())}
             onChange={(e) =>
               setAlbum((prev) => ({ ...prev, endDateString: e.target.value }))
             }

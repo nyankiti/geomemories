@@ -14,7 +14,6 @@ import { DEFAULT_LAT_LNG, DEFAULT_ZOOM } from 'entities/geometory';
 
 // このページは未ログインのユーザーしかアクセスされない
 const Trial: NextPage = () => {
-  const { user } = useAuth();
   return (
     <div>
       <Head>
@@ -32,6 +31,7 @@ const Trial: NextPage = () => {
           savedAlbum={initialAlbumData}
           user_id={'trial'}
           album_id={'trial'}
+          isTrial={true}
         />
       </main>
     </div>
@@ -44,7 +44,6 @@ export default Trial;
 import nookies from 'nookies';
 import { GetServerSideProps } from 'next';
 import { adminAuth } from '../../firebase/server';
-import { useAuth } from 'context/authContext';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   try {

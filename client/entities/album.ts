@@ -24,7 +24,7 @@ export const buildAlbum = (docData?: DocumentData): Album => {
 
 export const initialAlbumData = {
   id: 'trial',
-  title: 'trial',
+  title: '最初のアルバム',
   data: [],
   updatedAt: { _nanoseconds: 0, _seconds: 0 },
 };

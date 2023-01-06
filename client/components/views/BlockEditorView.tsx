@@ -8,6 +8,8 @@ import { BLOCK_ID_LEN, i18n } from 'libs/editor/const';
 const DragDrop = require('editorjs-drag-drop');
 const Undo = require('editorjs-undo');
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
+/* components */
+import RecommendLoginModal from 'components/templates/RecommendLoginModal';
 /* globalState */
 import { useBlockSelector, useAlbumState } from 'globalState/albumState';
 import { usePassedGeomObjValue } from 'globalState/passedGeomObjState';
@@ -23,14 +25,21 @@ type Props = {
   savedAlbum: Album;
   album_id: string;
   user_id: string;
+  isTrial?: boolean;
 };
 
-const BlockEditor = ({ savedAlbum, album_id, user_id }: Props) => {
+const BlockEditor = ({
+  savedAlbum,
+  album_id,
+  user_id,
+  isTrial = false,
+}: Props) => {
   const editorId = useId();
   const router = useRouter();
   const editorRef = useRef<EditorJS>();
   // state
   const [isSaveLoading, setIsSaveLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
   // editor.js の API に実装されているnotifierを外部から呼び出すためのstate
   const [notifier, setNotifier] = useState<{ show: (option: any) => void }>();
   // global state
@@ -104,9 +113,11 @@ const BlockEditor = ({ savedAlbum, album_id, user_id }: Props) => {
   }, []);
 
   const handlePressSave = async () => {
-    if (user_id == 'trial') {
+    if (isTrial) {
       // ユーザーが未ログインだった場合の処理をここに書く
-      console.log('trial user clicked save button');
+      // localStorageにデータを保存する
+      localStorage.setItem('album', JSON.stringify(album));
+      setModalVisible(true);
     } else if (user) {
       setIsSaveLoading(true);
       const result = await updateAlbums(user_id, album_id, album);
@@ -162,6 +173,10 @@ const BlockEditor = ({ savedAlbum, album_id, user_id }: Props) => {
           </button>
         )}
       </div>
+      <RecommendLoginModal
+        visible={modalVisible}
+        setVisible={setModalVisible}
+      />
     </div>
   );
 };

@@ -9,10 +9,12 @@ import { Timestamp } from 'firebase/firestore';
 import { auth } from '../firebase/client';
 /* repository */
 import { getUser, updateUser } from 'repository/userRepository';
+import { createNewAlbum } from 'repository/userRepository';
 /* hooks */
 import { useAuth } from 'context/authContext';
 /* entities */
 import { User } from 'entities/user';
+import { Album } from 'entities/album';
 
 const SNSAuth: NextPage = () => {
   const router = useRouter();
@@ -74,7 +76,22 @@ const SNSAuth: NextPage = () => {
         body: JSON.stringify({ jwt }),
       });
 
-      router.push('/myalbums');
+      // お試しでアルバムを作ったユーザーはlocalStorageに保存されている。
+      const stringifiedPassedAlbum = localStorage.getItem('album');
+      if (stringifiedPassedAlbum) {
+        const passedAlbum = JSON.parse(stringifiedPassedAlbum) as Album;
+        const { id: _, ...newAlbum } = passedAlbum;
+        localStorage.removeItem('album');
+        const newAlubmId = await createNewAlbum(result.user.uid, newAlbum);
+        if (newAlubmId) {
+          // firebaseへの連続書き込みを防ぐために 0.2 秒待つ
+          setTimeout(() => {
+            router.push(`/builder?album_id=${newAlubmId}`);
+          }, 200);
+        }
+      } else {
+        router.push('/myalbums');
+      }
     } else {
       // 各種SNSからのredirectではない場合、トップページに戻す
       router.push('/');
