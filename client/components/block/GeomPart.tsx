@@ -19,7 +19,7 @@ const GeomPart = ({ block }: Props) => {
     });
   }, [block]);
   return (
-    <div className="my-4 flex items-center">
+    <div className="my-4 flex items-center justify-center">
       <div>
         <div className="inline-flex w-full items-center justify-center">
           <FaMapMarkerAlt className="mr-2 text-cyan-700" size={28} />

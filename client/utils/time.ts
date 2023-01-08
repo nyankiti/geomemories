@@ -11,6 +11,5 @@ export const getDateString = (time: Date) => {
       : time.getMonth() + 1;
   const date =
     time.getDate() < 10 ? '0' + String(time.getDate()) : time.getDate();
-  console.log(`${time.getFullYear()}-${month}-${date}`);
   return `${time.getFullYear()}-${month}-${date}`;
 };

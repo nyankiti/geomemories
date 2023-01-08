@@ -16,7 +16,6 @@ type Props = {
 };
 
 const HeaderPart = ({ block }: Props) => {
-  console.log(block);
   const text = block.data.text as string;
   const level = block.data.level as 1 | 2 | 3 | 4 | 5 | 6;
   return <p className={clsx(textSizeMapping[level], 'p-1')}>{text}</p>;

@@ -42,7 +42,7 @@ const Prod: NextPage<Props> = ({
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="py-4">
-        <p>共有用url: {share_url}</p>
+        {/* <p>共有用url: {share_url}</p> */}
         <ProdMapView
           initialLatLng={initialLatLng}
           initialZoom={initialZoom}
@@ -83,7 +83,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     // sessionがない かつ uidがクエリで渡されていない場合はloginページに飛ばす
     let user_id = ctx.query.uid as string | undefined;
 
-    console.log(user_id);
     if (!user_id) {
       const user = await adminAuth
         .verifySessionCookie(session, true)
